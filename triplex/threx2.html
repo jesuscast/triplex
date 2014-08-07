@@ -1,0 +1,153 @@
+<html>
+	<head>
+		<title>My first Three.js app</title>
+		<style>canvas { width: 100%; height: 100% }</style>
+		<script src="three.min.js"></script>
+		<script src="Detector.js"></script>
+		<script src="Stats.js"></script>
+		<script src="OrbitControls.js"></script>
+		<script src="THREEx.KeyboardState.js"></script>
+		<script src="THREEx.FullScreen.js"></script>
+		<script src="THREEx.WindowResize.js"></script>
+	</head>
+	<body>
+		<div id="container" style="position: absolute; left:0px; top:0px"></div>
+		<script>
+		//REWRITING OF BASIC FUNCTIONS
+
+		//CAMERA COORDINATES
+		//x=351.8948424644241, y=101.58323889336988, z=219.8883021509791
+
+		THREE.AxisHelper2 = function ( size ) {
+
+			size = size || 1;
+
+			var vertices = new Float32Array( [
+				0, 0, 0,  size, 0, 0,
+				0, 0, 0,  0, size, 0,
+				0, 0, 0,  0, 0, -size
+			] );
+
+			var colors = new Float32Array( [
+				1, 0, 0,  1, 0.6, 0,
+				0, 1, 0,  0.6, 1, 0,
+				0, 0, 1,  0, 0.6, 1
+			] );
+
+			var geometry = new THREE.BufferGeometry();
+			geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+			geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
+
+			var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors } );
+
+			THREE.Line.call( this, geometry, material, THREE.LinePieces );
+
+		};
+
+		THREE.AxisHelper2.prototype = Object.create( THREE.Line.prototype );
+
+		//END REWRITING OF BASIC FUNCTIONS
+			//GLOBAL VARIABLES
+			var container, scene, camera, renderer, controls, stats;
+			var keyboard = new THREEx.KeyboardState();
+			var clock = new THREE.Clock();
+
+			//OBJECTS
+			var cube;
+			init();
+			animate();
+
+			function init(){
+				//SCENE
+				scene = new THREE.Scene();
+				//CAMERA
+				var screenWidth = window.innerWidth;
+				var screenHeight = window.innerHeight;
+				var ratioCamera  = screenWidth/screenHeight;
+				var angleCamera = 75;
+				var nearCamera = 0.1;
+				var farCamera = 1000;
+				camera = new THREE.PerspectiveCamera(angleCamera, ratioCamera, nearCamera, farCamera);
+				camera.position.set(200,100,200);
+				scene.add(camera);
+				camera.lookAt(new THREE.Vector3(200, 100, 0));
+				// RENDERER
+				if ( Detector.webgl )
+					renderer = new THREE.WebGLRenderer( {antialias:true} );
+				else
+					renderer = new THREE.CanvasRenderer(); 
+				renderer.setSize(screenWidth, screenHeight);
+				container = document.getElementById("container");
+				container.appendChild(renderer.domElement);
+				//EVENTS
+				THREEx.WindowResize(renderer, camera);
+				THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+				
+				
+				// //CUBE
+				var cubeGeometry = new THREE.CubeGeometry( 50, 50, 50 );
+
+				// use LineBasicMaterial if no dashes are desired
+				var dashMaterial = new THREE.LineDashedMaterial( { color: 0xffffff, dashSize: 2, gapSize: 3 } );
+				
+				cube = new THREE.Line( geo2line(cubeGeometry), dashMaterial, THREE.LinePieces );
+				cube.position.set(100, 100, -100);
+				scene.add(cube);
+
+				
+
+				var axes = new THREE.AxisHelper2(5000);
+				axes.position = cube.position;
+				scene.add(axes);
+
+				
+			}
+
+			function animate(){
+				requestAnimationFrame(animate);
+				render();
+				update();
+			}
+
+			function update(){
+				if ( keyboard.pressed("z") ){	  
+					alert("x="+camera.position.x.toString()+", y="+camera.position.y.toString()+", z="+camera.position.z.toString());
+				}
+				controls.update();
+
+			}
+
+			function render(){
+				renderer.render(scene, camera);
+			}
+			function geo2line( geo ) // credit to WestLangley!
+			{
+			    var geometry = new THREE.Geometry();
+			    var vertices = geometry.vertices;
+				
+				for ( i = 0; i < geo.faces.length; i++ ) 
+				{
+			        var face = geo.faces[ i ];
+			        if ( face instanceof THREE.Face3 ) 
+					{
+			            var a = geo.vertices[ face.a ].clone();
+						var b = geo.vertices[ face.b ].clone();
+						var c = geo.vertices[ face.c ].clone();
+			            vertices.push( a,b, b,c, c,a );
+			        } 
+					else if ( face instanceof THREE.Face4 ) 
+					{
+						var a = geo.vertices[ face.a ].clone();
+						var b = geo.vertices[ face.b ].clone();
+						var c = geo.vertices[ face.c ].clone();
+						var d = geo.vertices[ face.d ].clone();
+			            vertices.push( a,b, b,c, c,d, d,a );
+			        }
+			    }
+
+			    geometry.computeLineDistances();
+			    return geometry;
+			}
+		</script>
+	</body>
+</html>
