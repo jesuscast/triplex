@@ -1,3 +1,13 @@
+/*------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+OBJECTS
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+*/
+
 //Constructor: line
 function Line(xArray, yArray, zArray, color){
 	//Variables
@@ -94,47 +104,65 @@ function AxesGrid(size, step){
 	}
 	this.line = new THREE.Line(geometry, material, THREE.LinePieces);
 }
-var container, scene, camera, renderer, controls, stats, raycaster, projector, allTheLines;
-var currentLineIntersected = undefined;
-var sphereSelection;
-var mouse = new THREE.Vector2();
-var clock = new THREE.Clock();
-var leftPressed = false;
-var rightPressed = false;
-var upPressed = false;
-var downPressed = false;
-var radiusCamera = 180;
-var xCameraPosition = 50;
-var yCameraPosition = 50;
-var zCameraPosition = 50;
-var cameraCenter = new THREE.Vector3(xCameraPosition, yCameraPosition, zCameraPosition);
-var pi = 3.14;
-var degrees = pi/180;
-var alphaAngle = 270*degrees; //horizontal
-var betaAngle = 180*degrees; //vertical for 3d
+/*------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+GLOBAL VARIABLES
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+*/
+
+// var container, scene, camera, renderer, controls, stats, raycaster, projector, allTheLines;
+// var currentLineIntersected = undefined;
+// var sphereSelection;
+// var mouse = new THREE.Vector2();
+// var clock = new THREE.Clock();
+// var leftPressed = false;
+// var rightPressed = false;
+// var upPressed = false;
+// var downPressed = false;
+// var radiusCamera = 180;
+// var xCameraPosition = 50;
+// var yCameraPosition = 50;
+// var zCameraPosition = 50;
+// var cameraCenter = new THREE.Vector3(xCameraPosition, yCameraPosition, zCameraPosition);
+// var pi = 3.14;
+// var degrees = pi/180;
+// var alphaAngle = 270*degrees; //horizontal
+// var betaAngle = 180*degrees; //vertical for 3d
 //I put it in 90 degrees so it doesnt add extra cosine
-init();
-animate();
 
 
-function init(){
+/*------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+GRAPHING FUNCTIONS
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+*/
+
+function initGraphing(){
 	//Set the screen, container, renderer, and scene
-	container = document.createElement( 'div' );
-	document.body.appendChild(container);
+	//container = document.createElement( 'div' );
 	scene = new THREE.Scene();
-	renderer = new THREE.WebGLRenderer({ alpha: true });
-	//renderer = new THREE.CanvasRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
-
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
+	container = $("#graphCanvas");
+	//renderer = new THREE.WebGLRenderer({ canvas: container.get(0), alpha: true });
+	renderer = new THREE.CanvasRenderer({canvas: container.get(0)});
+    renderer.setSize(container.width(), container.height());
+    //container.appendChild(renderer.domElement);
+    //document.getElementById('graph').appendChild(renderer.domElement);
+    camera = new THREE.PerspectiveCamera(45, container.width()/container.height(), 1, 500);
     setCameraPosition();
     camera.lookAt(cameraCenter);
     camera.rotation.order = 'YXZ';    
     scene.add(camera);
-	var size = 100;
-	var step = 10;
-	var axesGrid = new AxesGrid(size, step);
+	// var size = 100;
+	// var step = 10;
+	var axesGrid = new AxesGrid(options.size, options.step);
 	scene.add(axesGrid.getGrid());
 	//Creates the object that is going to hold all lines
 	allTheLines = new THREE.Object3D();
@@ -144,8 +172,8 @@ function init(){
 	raycaster  = new THREE.Raycaster();
 	raycaster.linePrecision = 3;
 	//Add sample line
-	var line1 = new Line([0, 20, 50, 100],[0, 20, 50, 100],[0, 20, 70, 80]);
-	allTheLines.add(line1.getLine());
+	// var line1 = new Line([0, 20, 50, 100],[0, 20, 50, 100],[0, 20, 70, 80]);
+	// allTheLines.add(line1.getLine());
 	//Render the scene
     renderer.setClearColor( 0xffffff, 1);
 	renderer.render(scene, camera);
@@ -181,8 +209,8 @@ function init(){
 
 }
 
-function animate(){
-	requestAnimationFrame(animate);
+function animateGraphing(){
+	requestAnimationFrame(animateGraphing);
 
 	if (leftPressed) {
         //camera.rotation.y += 0.01;
@@ -199,11 +227,11 @@ function animate(){
         betaAngle += 0.4*degrees;
     }
     setCameraPosition();
-	render();
-	update();
+    updateGraphing();
+	renderGraphing();
 }
 
-function update(){
+function updateGraphing(){
 	// if ( keyboard.pressed("z") ){	  
 	// 	alert("x="+camera.position.x.toString()+", y="+camera.position.y.toString()+", z="+camera.position.z.toString());
 	// }
@@ -211,7 +239,7 @@ function update(){
 
 }
 
-function render(){
+function renderGraphing(){
 	//Find intersections of the mouse and the lines
 	var mousePosition = new THREE.Vector3(mouse.x, mouse.y, 1);
 	projector.unprojectVector(mousePosition, camera);
@@ -234,19 +262,26 @@ function render(){
 	}
 	renderer.render(scene, camera);
 }
+/*------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+ADDITIONAL FUNCTIONS
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+*/
+
 function onDocumentMouseMove(){
 	event.preventDefault();
-	mouse.x = (event.clientX/window.innerWidth)*2-1;
-	mouse.y = -(event.clientY / window.innerHeight)*2+1;
+	mouse.x = ((event.clientX-container.offset().left)/container.width())*2-1;
+	mouse.y = -((event.clientY-container.offset().top)/ container.height())*2+1;
 }
 function setCameraPosition(){
 	camera.position.set(xCameraPosition+radiusCamera*(Math.cos(alphaAngle)*Math.cos(betaAngle)), yCameraPosition+radiusCamera*Math.sin(betaAngle), zCameraPosition+radiusCamera*(Math.cos(betaAngle)*Math.sin(alphaAngle)));
 	camera.lookAt(cameraCenter);
 	//the sin(alphaAngle) is negative because the z axis runs positive downwards (towards us)
 }
-
-
-
 
 
 

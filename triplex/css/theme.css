@@ -1,0 +1,25 @@
+body {
+	font-family: Monospace;
+	background-color: #f0f0f0;
+	margin: 0px;
+	overflow: hidden;
+}
+#container {
+	position: absolute;
+	width: 100%;
+}
+#container section {
+	position: relative;
+	float: left;
+	height: 900px;
+}
+#container section#options {
+	width: 15%;
+}
+#container section#graph {
+	width: 85%;
+}
+#container section#graph canvas {
+	position: relative;
+	width: 100%;
+}

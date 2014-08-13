@@ -5,24 +5,31 @@
 		<title>three.js canvas - interactive lines</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<script src="Detector.js"></script>
-		<script src="keyboard.js"></script>
-		<style>
-			body {
-				font-family: Monospace;
-				background-color: #f0f0f0;
-				margin: 0px;
-				overflow: hidden;
-			}
-		</style>
+		<!--SCRIPTS-->
+		<script src="js/jquery-1.9.1.js"></script>
+		<script src="js/Detector.js"></script>
+		<script src="js/keyboard.js"></script>
+		<script src="js/three.min.js"></script>
+		<script src="js/Stats.js"></script>
+		<!--END SCRIPTS-->
+		<!--STYLES-->
+		<link rel="stylesheet" type="text/css" href="css/theme.css" />
+		<!--END STYLES-->
 	</head>
 	<body>
+		<div id="container">
+			<section id="options">
+				YO
+			</section><!--end options-->
+			<section id="graph">
+				<canvas id="graphCanvas">
 
-		<script src="three.min.js"></script>
-
-		<script src="Stats.js"></script>
-
-		<script src="graphingModule.js"></script>
-
+				</canvas>
+			</section><!--end graph-->
+		</div>
+		<script src="js/variablesModule.js"></script>
+		<script src="js/graphingModule.js"></script>
+		<script src="js/connectorModule.js"></script>
+		<script src="js/motherfuckerModule.js"></script>
 	</body>
 </html>
