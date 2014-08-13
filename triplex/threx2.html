@@ -51,7 +51,10 @@
 			var container, scene, camera, renderer, controls, stats;
 			var keyboard = new THREEx.KeyboardState();
 			var clock = new THREE.Clock();
+			var mouse = new THREE.Vector2();
+			var radius = 100, theta = 0;
 
+			var currentIntersectedLine;
 			//OBJECTS
 			var cube;
 			init();
@@ -83,7 +86,13 @@
 				THREEx.WindowResize(renderer, camera);
 				THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
 				
-				
+				//LINE
+				var PI2 = Math.PI * 2;
+				var programDrawLine = function(context) {
+					context.beginPath();
+					context.arc(0, 0, 0.5, 0, PI2, true);
+					context.fill();
+				}
 				// //CUBE
 				var cubeGeometry = new THREE.CubeGeometry( 50, 50, 50 );
 

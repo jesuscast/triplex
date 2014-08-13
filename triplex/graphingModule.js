@@ -1,20 +1,21 @@
 //Constructor: line
 function Line(xArray, yArray, zArray, color){
 	//Variables
-	if (typeof color === 'undefined') { myVariable = 0x0000ff; }
+	if (typeof color === 'undefined') { color = 0x000000; }
 
 	this.point = new THREE.Vector3();
 	this.direction = new THREE.Vector3();
 	this.material = new THREE.LineBasicMaterial({
-				color: color
+				color: color,
+				linewidth: 1
 			});
 	this.geometry = new THREE.Geometry();
 	this.line = null;
-	//Inner Functions
+	//Private Functions
 	function isArray(myArray) {
 		return myArray.constructor.toString().indexOf("Array") > -1;
 	}
-	//Outer Functions
+	//Public Functions
 	this.getLine = function(){
 		return this.line;
 	}
@@ -41,62 +42,163 @@ function Line(xArray, yArray, zArray, color){
 	}
 }
 
-function AxesGrid(size){
-	this.lineLength = size;
-	this.xAxisX = [0];
-	this.xAxisY = [0];
-	this.xAxisZ = [0];
-	this.yAxisX = [0];
-	this.yAxisY = [0];
-	this.yAxisZ = [0];
-	this.zAxisX = [0];
-	this.zAxisY = [0];
-	this.zAxisZ = [0];
-	for(i=0; i<this.lineLength; i++){
-		this.xAxisX[i] = i;
-		this.xAxisY[i] = 0;
-		this.xAxisZ[i] = 0;
+function AxesGrid(size, step){
+	//Private Variables
+	var geometry = new THREE.Geometry();
+	var material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
+	var color1 = new THREE.Color( 0x87BFDD );
+	var color2 = new THREE.Color( 0x349FD9 );
+	var color3 = new THREE.Color( 0x1546E8 );
+	var color4 = new THREE.Color( 0x0837D1 );
+	var color5 = new THREE.Color( 0x072CA8 );
+	var color6 = new THREE.Color( 0x06268F );
+	//Public Variables
+	this.line = null;
+	//Private functions
+	//..
 
-		this.yAxisX[i] = 0;
-		this.yAxisY[i] = i;
-		this.yAxisZ[i] = 0;
-
-		this.zAxisX[i] = 0;
-		this.zAxisY[i] = 0;
-		this.zAxisZ[i] = -i;
+	//Public Functions
+	this.getGrid = function(){
+		return this.line;
 	}
-	this.xAxis = new Line(this.xAxisX, this.xAxisY, this.xAxisZ, 0x0000ff);
-	this.yAxis = new Line(this.yAxisX, this.yAxisY, this.yAxisZ, 0xff0000);
-	this.zAxis = new Line(this.zAxisX, this.zAxisY, this.zAxisZ, 0x00ff00);
-
-
+	//Body
+	
+	for(i=0; i<=size; i+=step){
+		//creates the x grid
+		geometry.vertices.push(
+			new THREE.Vector3(0, 0, i),
+			new THREE.Vector3(size, 0, i),
+			new THREE.Vector3(i, 0, 0),
+			new THREE.Vector3(i, 0, size)
+		);
+		//creates the z grid
+		geometry.vertices.push(
+			new THREE.Vector3(0, 0, i),
+			new THREE.Vector3(0, size, i),
+			new THREE.Vector3(0, i, 0),
+			new THREE.Vector3(0, i, size)
+		);
+		//creates the y grid
+		geometry.vertices.push(
+			new THREE.Vector3(i, 0, 0),
+			new THREE.Vector3(i, size, 0),
+			new THREE.Vector3(0, i, 0),
+			new THREE.Vector3(size, i, 0)
+		);
+		var colorX = i === 0 ? color1 : color2;
+		var colorY = i === 0 ? color3 : color4;
+		var colorZ = i === 0 ? color5 : color6;
+		geometry.colors.push( colorX, colorX, colorX, colorX );
+		geometry.colors.push( colorY, colorY, colorY, colorY );
+		geometry.colors.push( colorZ, colorZ, colorZ, colorZ );
+	}
+	this.line = new THREE.Line(geometry, material, THREE.LinePieces);
 }
-
-var container, scene, camera, renderer, controls, stats;
+var container, scene, camera, renderer, controls, stats, raycaster, projector, allTheLines;
+var currentLineIntersected = undefined;
+var sphereSelection;
+var mouse = new THREE.Vector2();
 var clock = new THREE.Clock();
-
+var leftPressed = false;
+var rightPressed = false;
+var upPressed = false;
+var downPressed = false;
+var radiusCamera = 180;
+var xCameraPosition = 50;
+var yCameraPosition = 50;
+var zCameraPosition = 50;
+var cameraCenter = new THREE.Vector3(xCameraPosition, yCameraPosition, zCameraPosition);
+var pi = 3.14;
+var degrees = pi/180;
+var alphaAngle = 270*degrees; //horizontal
+var betaAngle = 180*degrees; //vertical for 3d
+//I put it in 90 degrees so it doesnt add extra cosine
 init();
 animate();
-function init(){
-	renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
-    camera.position.set(50, 50, 130);
-    camera.lookAt(new THREE.Vector3(50, 50, 0));
-    scene = new THREE.Scene();
-    // var line2 = new line([-10, 0, 10],[0, 10, 0],[0,0,0]);
-    // var lineLOL = line2.getLine();
-    var axisLines = new AxesGrid(100);
-	scene.add(axisLines.xAxis.getLine());
-    scene.add(axisLines.yAxis.getLine());
-    scene.add(axisLines.zAxis.getLine());
 
+
+function init(){
+	//Set the screen, container, renderer, and scene
+	container = document.createElement( 'div' );
+	document.body.appendChild(container);
+	scene = new THREE.Scene();
+	renderer = new THREE.WebGLRenderer({ alpha: true });
+	//renderer = new THREE.CanvasRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
+    setCameraPosition();
+    camera.lookAt(cameraCenter);
+    camera.rotation.order = 'YXZ';    
+    scene.add(camera);
+	var size = 100;
+	var step = 10;
+	var axesGrid = new AxesGrid(size, step);
+	scene.add(axesGrid.getGrid());
+	//Creates the object that is going to hold all lines
+	allTheLines = new THREE.Object3D();
+	//Create projector for the projector of the plot into the camera
+	projector = new THREE.Projector();
+	//Add raycaster that is going to gold all the plots
+	raycaster  = new THREE.Raycaster();
+	raycaster.linePrecision = 3;
+	//Add sample line
+	var line1 = new Line([0, 20, 50, 100],[0, 20, 50, 100],[0, 20, 70, 80]);
+	allTheLines.add(line1.getLine());
+	//Render the scene
+    renderer.setClearColor( 0xffffff, 1);
 	renderer.render(scene, camera);
+	//Add Sphere that marks selected line
+	var PI2 = Math.PI * 2;
+	var programForDrawingSphereSelection = function ( context ) {
+
+		context.beginPath();
+		context.arc( 0, 0, 0.5, 0, PI2, true );
+		context.fill();
+
+	}
+	sphereSelection = new THREE.Sprite(
+			new THREE.SpriteCanvasMaterial({
+				color: 0xff0000,
+				program: programForDrawingSphereSelection
+			})
+ 		);
+	sphereSelection.scale.x = 5;
+	sphereSelection.scale.y = 5;
+	//sphereSelection.position.set(50, 50, 50);
+	sphereSelection.visible = false;
+	scene.add(sphereSelection);
+	//Put the allTheLines object into the scene
+	scene.add(allTheLines);
+	//KEYBOARD BINDINGS
+	KeyboardJS.on('left', function() { leftPressed = true; }, function() { leftPressed = false; });
+    KeyboardJS.on('right', function() { rightPressed = true; }, function() { rightPressed = false; });
+    KeyboardJS.on('up', function() { upPressed = true; }, function() { upPressed = false; });
+    KeyboardJS.on('down', function() { downPressed = true; }, function() { downPressed = false; });
+    //MOUSE BINDINGS
+    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
 }
 
 function animate(){
 	requestAnimationFrame(animate);
+
+	if (leftPressed) {
+        //camera.rotation.y += 0.01;
+        alphaAngle += 0.4*degrees;
+    } else if (rightPressed) {
+        //camera.rotation.y -= 0.01;
+        alphaAngle -= 0.4*degrees;
+    }
+    if (upPressed) {
+        //camera.rotation.x += 0.01;
+        betaAngle -= 0.4*degrees;
+    } else if (downPressed) {
+        //camera.rotation.x -= 0.01;
+        betaAngle += 0.4*degrees;
+    }
+    setCameraPosition();
 	render();
 	update();
 }
@@ -110,5 +212,52 @@ function update(){
 }
 
 function render(){
+	//Find intersections of the mouse and the lines
+	var mousePosition = new THREE.Vector3(mouse.x, mouse.y, 1);
+	projector.unprojectVector(mousePosition, camera);
+	raycaster.set(camera.position, mousePosition.sub(camera.position).normalize());
+	var intersects = raycaster.intersectObjects(allTheLines.children, true);
+	if(intersects.length > 0){
+		if(currentLineIntersected!==undefined){
+			currentLineIntersected.material.linewidth = 1;
+		}
+		currentLineIntersected = intersects[0].object;
+		currentLineIntersected.material.linewidth = 5;
+		sphereSelection.visible = true;
+		sphereSelection.position.copy(intersects[0].point);
+	} else {
+		if(currentLineIntersected !== undefined){
+			currentLineIntersected.material.linewidth = 1;
+		}
+		currentLineIntersected = undefined;
+		sphereSelection.visible = false;
+	}
 	renderer.render(scene, camera);
 }
+function onDocumentMouseMove(){
+	event.preventDefault();
+	mouse.x = (event.clientX/window.innerWidth)*2-1;
+	mouse.y = -(event.clientY / window.innerHeight)*2+1;
+}
+function setCameraPosition(){
+	camera.position.set(xCameraPosition+radiusCamera*(Math.cos(alphaAngle)*Math.cos(betaAngle)), yCameraPosition+radiusCamera*Math.sin(betaAngle), zCameraPosition+radiusCamera*(Math.cos(betaAngle)*Math.sin(alphaAngle)));
+	camera.lookAt(cameraCenter);
+	//the sin(alphaAngle) is negative because the z axis runs positive downwards (towards us)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
