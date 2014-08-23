@@ -27,6 +27,7 @@ function Line(xArray, yArray, zArray, color){
 	}
 	//Public Functions
 	this.getLine = function(){
+		//alert("NEW LINE MOTHERFUCKER");
 		return this.line;
 	}
 	//Body
@@ -165,7 +166,7 @@ function initGraphing(){
 	var axesGrid = new AxesGrid(options.size, options.step);
 	scene.add(axesGrid.getGrid());
 	//Creates the object that is going to hold all lines
-	allTheLines = new THREE.Object3D();
+	//allTheLines = new THREE.Object3D();
 	//Create projector for the projector of the plot into the camera
 	projector = new THREE.Projector();
 	//Add raycaster that is going to gold all the plots
