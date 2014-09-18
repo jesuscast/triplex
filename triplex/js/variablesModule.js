@@ -32,3 +32,5 @@ var options = {
 	size: 100,
 	step: 10
 }
+
+allTheLines = new THREE.Object3D();

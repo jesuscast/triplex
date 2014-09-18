@@ -150,8 +150,8 @@ function initGraphing(){
 	//container = document.createElement( 'div' );
 	scene = new THREE.Scene();
 	container = $("#graphCanvas");
-	//renderer = new THREE.WebGLRenderer({ canvas: container.get(0), alpha: true });
-	renderer = new THREE.CanvasRenderer({canvas: container.get(0)});
+	renderer = new THREE.WebGLRenderer({ canvas: container.get(0), alpha: true });
+	//renderer = new THREE.CanvasRenderer({canvas: container.get(0)});
     renderer.setSize(container.width(), container.height());
     //container.appendChild(renderer.domElement);
     //document.getElementById('graph').appendChild(renderer.domElement);
