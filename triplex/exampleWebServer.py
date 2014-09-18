@@ -335,8 +335,8 @@ def retrieveSectorHistorical(stocks_id):
 				smallestChange = changesZ[i][j]/tot
 			if biggestChange < changesZ[i][j]/tot:
 				biggestChange = changesZ[i][j]/tot
-		print smallestChange
-		print biggestChange
+		print "smallestChange:"+str(smallestChange)
+		print "biggestChange:"+str(biggestChange)
 		#print tot+","
 		for i in range(len(stocks)):
 			if (changesZ[i][j] != 0) and (tot != 0):
@@ -349,46 +349,46 @@ def retrieveSectorHistorical(stocks_id):
 				processedData[i]['z'].append(str(0.0))
 
 	# normalization
-	minZProcessed = 10000.0
-	maxZProcessed = -10000.0
-	graphRange = 130.0
-	for i in range(len(processedData)):
-		for j in range(len(processedData[i]['z'])):
-			if processedData[i]['z'][j] < minZProcessed:
-				minZProcessed = processedData[i]['z'][j]
-			if processedData[i]['z'][j] > maxZProcessed:
-				maxZProcessed = processedData[i]['z'][j]
-	if maxZProcessed == minZProcessed:
-		maxZProcessed = graphRange
-		minZProcessed = 0.0
-	print "max:"+str(maxZProcessed)
-	print "min"+str(minZProcessed)
-	rangeZ = graphRange/(maxZProcessed-minZProcessed)
-	for i in range(len(processedData)):
-		for j in range(len(processedData[i]['z'])):
-			processedData[i]['z'][j] = str((processedData[i]['z'][j]-minZProcessed)*rangeZ)
+	# minZProcessed = 10000.0
+	# maxZProcessed = -10000.0
+	# graphRange = 130.0
+	# for i in range(len(processedData)):
+	# 	for j in range(len(processedData[i]['z'])):
+	# 		if float(processedData[i]['z'][j]) < minZProcessed:
+	# 			minZProcessed = float(processedData[i]['z'][j])
+	# 		if float(processedData[i]['z'][j]) > maxZProcessed:
+	# 			maxZProcessed = float(processedData[i]['z'][j])
+	# if maxZProcessed == minZProcessed:
+	# 	maxZProcessed = graphRange
+	# 	minZProcessed = 0.0
+	# print "max:"+str(maxZProcessed)
+	# print "min"+str(minZProcessed)
+	# rangeZ = graphRange/(maxZProcessed-minZProcessed)
+	# for i in range(len(processedData)):
+	# 	for j in range(len(processedData[i]['z'])):
+	# 		processedData[i]['z'][j] = str((float(processedData[i]['z'][j])-minZProcessed)*rangeZ)
 	#end normalizartion
 
-	for i in range(len(processedData)):
-		# make fit
-		ztemporal = []
-		xtemporal = []
-		if len(processedData[i]['z']) > len(processedData[i]['x']):
-			ztemporal = np.array([ float(processedData[i]['z'][j]) for j in range(len(processedData[i]['x'])) ])
-			xtemporal = np.array([ float(n) for n in processedData[i]['x'] ])
-		else:
-			xtemporal = np.array([ float(processedData[i]['x'][j]) for j in range(len(processedData[i]['z'])) ])
-			ztemporal = np.array([ float(n) for n in processedData[i]['z']])
+	# for i in range(len(processedData)):
+	# 	# make fit
+	# 	ztemporal = []
+	# 	xtemporal = []
+	# 	if len(processedData[i]['z']) > len(processedData[i]['x']):
+	# 		ztemporal = np.array([ float(processedData[i]['z'][j]) for j in range(len(processedData[i]['x'])) ])
+	# 		xtemporal = np.array([ float(n) for n in processedData[i]['x'] ])
+	# 	else:
+	# 		xtemporal = np.array([ float(processedData[i]['x'][j]) for j in range(len(processedData[i]['z'])) ])
+	# 		ztemporal = np.array([ float(n) for n in processedData[i]['z']])
 
-		# do fit
-		M = np.column_stack((xtemporal**2,)) # construct design matrix
-		k, _, _, _ = np.linalg.lstsq(M, ztemporal) # least-square fit of M * k = y
+	# 	# do fit
+	# 	M = np.column_stack((xtemporal**2,)) # construct design matrix
+	# 	k, _, _, _ = np.linalg.lstsq(M, ztemporal) # least-square fit of M * k = y
 
-		# equationFit = np.polyfit(xtemporal, ztemporal, 1)
-		# equation = np.poly1d(equationFit)
-		lol = k*xtemporal**2
-		resultEquation = lol[0:len(lol)-1]
-		processedData[i]['z'] = [ str(n) for n in resultEquation]
+	# 	# equationFit = np.polyfit(xtemporal, ztemporal, 1)
+	# 	# equation = np.poly1d(equationFit)
+	# 	lol = k*xtemporal**2
+	# 	resultEquation = lol[0:len(lol)-1]
+	# 	processedData[i]['z'] = [ str(n) for n in resultEquation]
 		# processedData[i]['z'] = [ str(equation(xValue)) for xValue in xtemporal]
 
 	return '^'.join([','.join(stock['x'])+"\n"+','.join(stock['y'])+"\n"+','.join(stock['z']) for stock in processedData])
