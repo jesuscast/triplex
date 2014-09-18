@@ -348,6 +348,27 @@ def retrieveSectorHistorical(stocks_id):
 				# processedData[i]['z'][(len(processedData[i]['z'])-1)]
 				processedData[i]['z'].append(str(0.0))
 
+	# normalization
+	minZProcessed = 10000.0
+	maxZProcessed = -10000.0
+	graphRange = 130.0
+	for i in range(len(processedData)):
+		for j in range(len(processedData[i]['z'])):
+			if processedData[i]['z'][j] < minZProcessed:
+				minZProcessed = processedData[i]['z'][j]
+			if processedData[i]['z'][j] > maxZProcessed:
+				maxZProcessed = processedData[i]['z'][j]
+	if maxZProcessed == minZProcessed:
+		maxZProcessed = graphRange
+		minZProcessed = 0.0
+	print "max:"+str(maxZProcessed)
+	print "min"+str(minZProcessed)
+	rangeZ = graphRange/(maxZProcessed-minZProcessed)
+	for i in range(len(processedData)):
+		for j in range(len(processedData[i]['z'])):
+			processedData[i]['z'][j] = str((processedData[i]['z'][j]-minZProcessed)*rangeZ)
+	#end normalizartion
+
 	for i in range(len(processedData)):
 		# make fit
 		ztemporal = []
