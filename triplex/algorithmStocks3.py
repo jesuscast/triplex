@@ -13,20 +13,20 @@ def getY(points, pointsRequested):
 			for i in range(lastI, lPoints):
 				if ended==False:
 					if x > points[i][0]:
-						print "x:"+str(x)+" points[i][0]:"+str(points[i][0])
+						# print "x:"+str(x)+" points[i][0]:"+str(points[i][0])
 						index = i
 						#---- this prevents the code from going again to this index
 						lastI = index+1
-						print "index:"+str(index)+" value:"+str(points[index][1])
+						# print "index:"+str(index)+" value:"+str(points[index][1])
 						ended = True
 			if index+2 <= lPoints:
 				slope = (points[index+1][1]-points[index][1])/(points[index+1][0]-points[index][0])
-				print "index:"+str(index)
-				print "slope:"+str(slope)
-				if slope<0:
-					print "slope negative"
-				else:
-					print "slope is positive"
+				# print "index:"+str(index)
+				# print "slope:"+str(slope)
+				# if slope<0:
+				# 	# print "slope negative"
+				# else:
+				# 	# print "slope is positive"
 				b = points[index][1]-slope*points[index][0]
 				newPoints.append(x*slope+b)
 	return newPoints
@@ -35,11 +35,11 @@ def getY(points, pointsRequested):
 def valsInString(listCurrent):
 	result = []
 	if type(listCurrent) is not types.ListType:
-		#print listCurrent
+		## print listCurrent
 		return str(listCurrent)
 	else:
 		for thisSubList in listCurrent:
-			#print thisSubList
+			## print thisSubList
 			result.append(valsInString(thisSubList))
 		return result
 
@@ -47,11 +47,11 @@ def valsInString(listCurrent):
 def printList(listCurrent, depth=0):
 	result = ""
 	if type(listCurrent) is not types.ListType:
-		#print listCurrent
+		## print listCurrent
 		return "--"*depth+str(depth)+":"+str(listCurrent)+"\n"
 	else:
 		for i, thisSubList in enumerate(listCurrent):
-			#print thisSubList
+			## print thisSubList
 			result += "--"*depth+str(depth)+":element #"+str(i)+"\n"
 			result +=(printList(thisSubList, depth+1))
 		return result
@@ -60,11 +60,11 @@ def printList(listCurrent, depth=0):
 def valsInFloat(listCurrent):
 	result = []
 	if type(listCurrent) is not types.ListType:
-		#print listCurrent
+		## print listCurrent
 		return float(listCurrent)
 	else:
 		for thisSubList in listCurrent:
-			#print thisSubList
+			## print thisSubList
 			result.append(valsInFloat(thisSubList))
 		return result
 
@@ -105,14 +105,14 @@ def sectorBezier(stocks_id):
 			if temp < minP:
 				minP = temp
 	# minP -= 50
-	print "shortestStockIndex:"+str(shortestStockIndex)
+	# print "shortestStockIndex:"+str(shortestStockIndex)
 	#---- now that we have the shortestStockIndex we can set a limits to normalize the x axis
 	minT = 0.0
 	maxT = float(len(stocks[shortestStockIndex]))
 	axisLimit = int(maxT)
 	rangePrices = graphRange/(maxP-minP)
 	rangeT = graphRange/(maxT-minT)
-	print "maxT:"+str(maxT)
+	# print "maxT:"+str(maxT)
 	#---- creates the axis values
 	for i in range(stocksLength):
 		#---- initialize variables
@@ -140,20 +140,20 @@ def sectorBezier(stocks_id):
 			# ---- the following avoids retrieving stocks from the last hours
 			# if float(xAxis[len(xAxis)-1]) >= 130.0:
 			# 	break
-		print "changesZ length:"+str(len(changesZ[i]))
+		# print "changesZ length:"+str(len(changesZ[i]))
 		changesZ[i][0] = changesZ[i][1]
 		processedData[i][0] = xAxis
 		processedData[i][1] = yAxis
-	print printList(changesZ)
+	# print # printList(changesZ)
 	#--- calcualtes the changes in prices
 	for j in range(1, axisLimit):
 		tot = 0.0
 		for i in range(stocksLength):
 			tot += float(changesZ[i][j])
-		print "tot:"+str(tot)
+		# print "tot:"+str(tot)
 		for i in range(stocksLength):
 			if (changesZ[i][j] != 0) and (tot != 0):
-				print "inside if"
+				# print "inside if"
 				processedData[i][2].append(\
 					float(changesZ[i][j]/tot)\
 					)
@@ -161,12 +161,12 @@ def sectorBezier(stocks_id):
 				# processedData[i]['z'][(len(processedData[i]['z'])-1)]
 				if i>0:
 					processedData[i][2].append((processedData[i][2][-1]))
-					print "tot=0 or changes=0"
+					# print "tot=0 or changes=0"
 				else:
 					processedData[i][2].append(0.0)
-					print "zero here"
+					# print "zero here"
 	processedData[i][2].append(processedData[i][2][-1])
-	print printList(processedData)
+	# print # printList(processedData)
 	#---- create new values using bezier curve
 	finalAxis = []
 	for i in range(len(processedData)):
@@ -194,8 +194,8 @@ def sectorBezier(stocks_id):
 	if maxZProcessed == minZProcessed:
 		maxZProcessed = 1.0
 		minZProcessed = 0.0
-	print "maxZ:"+str(maxZProcessed)
-	print "minZ:"+str(minZProcessed)
+	# print "maxZ:"+str(maxZProcessed)
+	# print "minZ:"+str(minZProcessed)
 	rangeZ = graphRange/(maxZProcessed-minZProcessed)
 	for i in range(finalAxisLength):
 		for j in range(finalAxisZLength):
@@ -216,5 +216,5 @@ def sectorBezier(stocks_id):
 			finalAxis[i][1][j] = ((float(finalAxis[i][1][j])-minPProcessed)*rangePProcessed)
 	#---- repeats the last value so we don't miss anything
 	# finalAxis[i][2].append(processedData[i][2][-1])
-	print printList(processedData)
+	# print # printList(processedData)
 	return '^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(finalAxis)])
