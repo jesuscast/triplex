@@ -40,7 +40,7 @@ $(document).ready(function(){
 
 
 	//LOAD TODAY STOCKS FOR SEVERAL COMPANIES
-	$.get( "stocks-xyz/IBM,MSFT", function( data ) {
+	$.get( "stocks-xyz2/AAPL,GE", function( data ) {
 	  //$( ".result" ).html( data );
 	  //alert( "Load was performed." );
 	  initGraphing();
@@ -71,7 +71,7 @@ $(document).ready(function(){
 		// newLine = new Line(xAxis, yAxis, zAxis);
 		// allTheLines.add(newLine.getLine());
 		alert(i);
-		var thisStock = stocks[i].split("\n");
+		var thisStock = stocks[i].split("%");
 		prompt("stock #"+i.toString(),thisStock.length);
 		var xAxisR = thisStock[0].split(",");
 		var yAxisR = thisStock[1].split(",");
