@@ -23,6 +23,10 @@ def server_static_js(js_file):
 def server_static_css(css_file):
 	return bottle.static_file(css_file, root='css')
 
+@app.route('/images/<images_file>')
+def server_static_css(images_file):
+	return bottle.static_file(images_file, root='images')
+
 #Route the latest realtime stocks from today and put axis in the specific coordinates bro
 @app.route('/realtimestocks/<stocks_id>')
 def retrieveStocks(stocks_id):

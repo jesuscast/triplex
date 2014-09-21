@@ -27,7 +27,7 @@ animateGraphing();
 });
 
 function loadStocks(){
-	allTheStocksString = allTheStocks.join();
+	allTheStocksString = allTheStocks.items().join();
 	$.get( "stocks-xyz/"+allTheStocksString, function( data ) {
 	  initGraphing();
 	  animateGraphing();
@@ -47,7 +47,7 @@ function loadStocks(){
 			yAxis[j] = parseInt(yAxisR[j]);
 			zAxis[j] = parseInt(zAxisR[j]);
 		}
-		var newLine = new Line(xAxis, yAxis, zAxis);
+		var newLine = new Line(xAxis, yAxis, zAxis, allTheStocksColors.items()[i][1]);
 		// newLine.indexStock = currentLineIndex;
 		// currentLineIndex += 1;
 		//stockIndexes[i] = allTheStocks[i];
