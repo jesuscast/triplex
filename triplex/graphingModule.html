@@ -11,25 +11,42 @@
 		<script src="js/keyboard.js"></script>
 		<script src="js/three.min.js"></script>
 		<script src="js/Stats.js"></script>
+		<script src="js/jquery-1.4.4.min.js"></script>
+        <script src="js/jquery-ui-1.8.7.custom.min.js"></script>
+        <script src="js/jquery.inlineedit.js"></script>
+        <script src="js/pubsub.js"></script>
+        <script src="js/base.js"></script>
+        <script src="js/jquery.cookie.js"></script>
 		<!--END SCRIPTS-->
 		<!--STYLES-->
 		<link rel="stylesheet" type="text/css" href="css/theme.css" />
 		<!--END STYLES-->
 	</head>
 	<body>
-		<div id="container">
-			<section id="options">
-				YO
-			</section><!--end options-->
-			<section id="graph">
-				<canvas id="graphCanvas">
+		<div class="container">
+				<section id="options">
+					<form>
+				    	<label>Select a Period of time:</label>
+	                  <select>
+	                    
+						<option>The Past Week</option>
+						<option>The Past Month</option>
 
-				</canvas>
-			</section><!--end graph-->
-		</div>
-		<script src="js/variablesModule.js"></script>
-		<script src="js/graphingModule.js"></script>
-		<script src="js/connectorModule.js"></script>
-		<script src="js/actionsModule.js"></script>
+						<option>The Past Year</option>
+
+	                  </select>
+	                  <div class="selectStocks">
+    <label>Write the stock symbol</label>
+    <input type="text" id="stockInput" /><input type="button" id="addStockBtn" value="add" />
+    <ul id="stocks">
+
+    </ul>
+					</div>
+		            </form>
+		        </section>
+		        <section>
+
+		        </section>
+		        
 	</body>
 </html>

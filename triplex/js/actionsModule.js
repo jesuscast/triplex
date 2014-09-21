@@ -11,7 +11,24 @@ $(document).ready(function(){
 	}
 
 	//LOAD TODAY STOCKS FOR SEVERAL COMPANIES
-	$.get( "stocks-xyz/AAPL,GE", function( data ) {
+	
+initGraphing();
+animateGraphing();
+	/*------------
+	------------------------------------------------------------
+	------------------------------------------------------------
+	------------------------------------------------------------
+	INITIATION CALLS
+	------------------------------------------------------------
+	------------------------------------------------------------
+	------------------------------------------------------------
+	*/
+	
+});
+
+function loadStocks(){
+	allTheStocksString = allTheStocks.join();
+	$.get( "stocks-xyz/"+allTheStocksString, function( data ) {
 	  initGraphing();
 	  animateGraphing();
 	  stocks = data.split("^");
@@ -31,18 +48,25 @@ $(document).ready(function(){
 			zAxis[j] = parseInt(zAxisR[j]);
 		}
 		var newLine = new Line(xAxis, yAxis, zAxis);
+		// newLine.indexStock = currentLineIndex;
+		// currentLineIndex += 1;
+		//stockIndexes[i] = allTheStocks[i];
 		allTheLines.add(newLine.getLine());
 		i+=1;
 	  }
 
 	});
-	/*------------
-	------------------------------------------------------------
-	------------------------------------------------------------
-	------------------------------------------------------------
-	INITIATION CALLS
-	------------------------------------------------------------
-	------------------------------------------------------------
-	------------------------------------------------------------
-	*/
-});
+}
+// function deleteStock(indexStock){
+// 	for(i=0; i<allTheLines.children.length; i++){
+// 		if(stock == indexStock){
+// 			allTheLines.remove(allTheLines.children[i]);
+// 		}
+// 	}
+//}
+
+function cleanGraph(){
+	for(i = 0; i<allTheLines.children.length; i++){
+		allTheLines.children.remove(i);
+	}
+}	
