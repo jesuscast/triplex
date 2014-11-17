@@ -1,0 +1,54 @@
+<div class="selectStocks">
+     <label>Todo List</label>
+
+    <div data-bind="visible: listVisible">
+        <form data-bind="submit: addListTask">
+            <div class="margin-top-10">Add list:
+                <input data-bind="value: newListText" placeholder="Humm a new list?" />
+                <button type="submit" class="btn btn-primary btn-sm">Add</button>
+            </div>
+        </form>
+        <ul data-bind="foreach : listTask" class="margin-top-10">
+            <li class="padding-bottom-5"><span data-bind="text: title, visible: !editable(), click: $parent.toggleEditableList"></span>
+                <input data-bind="value: title, visible: editable, hasFocus: editable" />
+                </span>
+                <button class="btn btn-sm" data-bind="click: $parent.showList">Show</button>
+            </li>
+        </ul>
+    </div>
+    <div id="listItems" data-bind="visible: itemsListVisible">
+        <form data-bind="submit: addTask">
+            <div class="margin-top-10">Add task:
+                <input data-bind="value: newTaskText" placeholder="What needs to be done?" />
+                <button type="submit" class="btn btn-primary btn-sm">Add</button>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-lg-6">
+                <table class="table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-2">
+                                <input type="checkbox" data-bind="click: selectAll, checked: allSelected" />
+                            </th>
+                            <th class="col-lg-5">Title</th>
+                            <th class="col-lg-5">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: tasks">
+                        <tr data-bind="css: { active : isDone()}">
+                            <td class="col-lg-2">
+                                <input type="checkbox" data-bind="checked: isDone" />
+                            </td>
+                            <td class="col-lg-5"><span data-bind="text: title, visible: !editable(), click: $parent.toggleEditable"></span>
+                                <input data-bind="value: title, disable: isDone, visible: editable, hasFocus: editable" />
+                            </td>
+                            <td class="col-lg-5"><a href="#" data-bind="click: $parent.remove"><span class="glyphicon glyphicon-trash"></span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary btn-sm" data-bind="click: backToMenu">Back</button>
+            </div>
+        </div>
+    </div>

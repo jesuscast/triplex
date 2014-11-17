@@ -6,9 +6,11 @@ import datetime
 import random
 import numpy as np
 import algorithmStocks as algorithmStocks
+import webbrowser
 #Global variables
 #########################################
 app = bottle.Bottle()
+webbrowser.open("http://localhost:8080")
 
 #Functions
 #########################################

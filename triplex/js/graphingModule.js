@@ -227,7 +227,7 @@ function initGraphing() {
     }
     var z_Label = makeTextSprite("Growth", {});
     z_Label.scale.normalize().multiplyScalar(1);
-    z_Label.position.set(160, 0, 50);
+    z_Label.position.set(160, 0, 65);
     z_Label.rotation.y = 0; //10.95;
     z_Label.name = "Hello Label";
     // Hello_Label.id = "HL";
@@ -235,7 +235,7 @@ function initGraphing() {
     scene.add(z_Label);
     var y_Label = makeTextSprite("Price", {});
     y_Label.scale.normalize().multiplyScalar(1);
-    y_Label.position.set(-20, 50, 130);
+    y_Label.position.set(-20, 65, 130);
     y_Label.rotation.y = 0; //10.95;
     y_Label.name = "Hello Label";
     // Hello_Label.id = "HL";
@@ -243,7 +243,7 @@ function initGraphing() {
     scene.add(y_Label);
     var x_Label = makeTextSprite("Time", {});
     x_Label.scale.normalize().multiplyScalar(1);
-    x_Label.position.set(50, -5, 130);
+    x_Label.position.set(65, -5, 130);
     x_Label.rotation.y = 0; //10.95;
     x_Label.name = "Hello Label";
     // Hello_Label.id = "HL";
