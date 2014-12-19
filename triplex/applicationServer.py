@@ -4,7 +4,6 @@ import bottle
 import yahoostocks as ys
 import datetime
 import random
-import numpy as np
 import algorithmStocks as algorithmStocks
 import webbrowser
 #Global variables

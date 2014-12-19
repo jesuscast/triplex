@@ -1,0 +1,71 @@
+body {
+  font-family: Monospace;
+  background-color: #f0f0f0;
+  margin: 0px;
+  overflow: hidden; }
+
+.container {
+  position: absolute;
+  width: 100%; }
+  .container section {
+    position: relative;
+    float: left;
+    height: 900px; }
+  .container section#options {
+    width: 22%; }
+  .container section#graph {
+    width: 75%; }
+    .container section#graph #graphCanvas {
+      position: absolute;
+      width: 100%;
+      height: 75%; }
+
+.margin-top-10 {
+  margin-top: 10px; }
+
+.padding-bottom-5 {
+  padding-bottom: 5px; }
+
+form, select, option {
+  margin: 0px;
+  padding: 0px; }
+
+body {
+  background-color: #fff; }
+
+section#options {
+  /*flatuicolors.com*/
+  font-family: 'Open Sans', sans-serif;
+  /*
+  background-color: #1abc9c;
+  color: #000;
+  */
+  border-right: 4px solid #34495e;
+  text-align: center; }
+  section#options form {
+    margin-top: 50px; }
+  section#options .selectStocks {
+    margin-top: 30px; }
+    section#options .selectStocks ul#stocksList {
+      list-style: none;
+      padding: 0px; }
+      section#options .selectStocks ul#stocksList li {
+        padding: 10px 0px 10px 0px;
+        border-bottom: 1px solid #e6e6e6; }
+
+.selectStocks {
+  margin-top: 30px; }
+
+.colorcube {
+  width: 50px;
+  height: 20px;
+  float: left; }
+
+/*ul#stocksList li:nth-child(odd) {
+	background-color: #E6E6E6;
+}
+ul#stocksList li:nth-child(even) {
+	background-color: #fff;
+}*/
+
+/*# sourceMappingURL=theme_new.css.map */
