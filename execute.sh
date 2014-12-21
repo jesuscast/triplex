@@ -1,1 +1,1 @@
-virtualenv envpython && source envpython/bin/activate && pip install && pip install requests
+virtualenv envpython && source envpython/bin/activate && pip install bottle && pip install requests 
