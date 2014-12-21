@@ -73,12 +73,16 @@ def stringStocksToList(stocksString):
 	return valsInFloat([ [ k.split(",") for k in n.split("%")] for n in stocksString.split("^") ])
 
 
-def sectorBezier(stocks_id):
+def sectorBezier(stocks_id, fromDateR, toDateR):
 	'''
 	x,y,z = 0,1,2
+	fromDate = day, month, year
+	toDate = day, month, year
 	'''
 	#---- separate the list of stocks
 	stocksList = stocks_id.split(',')
+	fromDate = [ int(n) for n in fromDateR.split(',') ]
+	toDate = [ int(n) for n in toDateR.split(',') ]
 	#---- set Variables
 	maxP = -10000.0
 	minP = 100000.0
@@ -92,7 +96,7 @@ def sectorBezier(stocks_id):
 	graphRange = 130.0
 	#---- retrieve stocks information
 	for stock in stocksList:
-		stocks.append(ys.historical(stock, {'month':12, 'day': 1, 'year':2014},{'month':12, 'day': 13, 'year':2014})[::-1])
+		stocks.append(ys.historical(stock, {'month':fromDate[1], 'day': fromDate[0], 'year':fromDate[2]},{'month':toDate[1], 'day': toDate[0], 'year':toDate[2]})[::-1])
 	#---- find the limits of the stocks so the x, y, and z axis match in length for all stocks
 	#---- this also finds the extrema for the prices so we could normalize the graph
 	for i in range(stocksLength):

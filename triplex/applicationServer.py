@@ -78,11 +78,7 @@ def retrieveStocks(stocks_id):
 #Retrieves the stocks xyz axis using a polynomial fit
 @app.route('/stocks-xyz/<stocks_id>')
 def yodude(stocks_id):
-	return algorithmStocks.sectorBezier(stocks_id)
-
-@app.route('/returnarray')
-def yodude():
-	return [1,2,3,[4,23,[123,213,123,123,123]]]
+	return algorithmStocks.sectorBezier(stocks_id, bottle.request.query.fromDate, bottle.request.query.toDate)
 
 #Route main page
 @app.route('/')
