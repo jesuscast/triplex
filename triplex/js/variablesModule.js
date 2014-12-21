@@ -16,6 +16,13 @@ var leftPressed = false;
 var rightPressed = false;
 var upPressed = false;
 var downPressed = false;
+var mousePressed = false;
+var pointSelected = false;
+//for retrieving the stocks
+var allTheStocksData = [];
+//end for retrieving the stocks
+//var pointSelectedCoordinates = new THREE.Vector3(0,0,0);
+var intersectedObject = null;
 var radiusCamera = 300; //300;
 var xCameraPosition = 50;
 var yCameraPosition = 50;
@@ -43,6 +50,7 @@ Array.prototype.remove = function(from, to) {
     return this.push.apply(this, rest);
 };
 
+var stocksArray = new Array();
 
 //var stockIndexes = {};
 

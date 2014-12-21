@@ -329,12 +329,16 @@ function renderGraphing() {
             currentLineIntersected.material.linewidth = 5;
             sphereSelection.visible = true;
             sphereSelection.position.copy(intersects[0].point);
+            pointSelected = true;
+            intersectedObject = intersects[0];
         } else {
             if (currentLineIntersected !== undefined) {
                 currentLineIntersected.material.linewidth = 2;
             }
             currentLineIntersected = undefined;
             sphereSelection.visible = false;
+            pointSelected = false;
+            intersectedObject = null;
         }
         renderer.render(scene, camera);
     }

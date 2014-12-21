@@ -27,11 +27,24 @@ animateGraphing();
 });
 
 function loadStocks(){
-	allTheStocksString = allTheStocks.items().join();
-	$.get( "stocks-xyz/"+allTheStocksString, function( data ) {
+	allTheStocksNames = allTheStocks.items();
+	$.get( "stocks-xyz/"+allTheStocksNames.join(), function( data ) {
+	  //clean the previous array of stocks
+	  stocksArray = new Array();
 	  initGraphing();
 	  animateGraphing();
-	  stocks = data.split("^");
+	  rawData = data.split("-MAXIMUMSEPARATOR-");
+	  tempMatrix = rawData[0].split("###");
+	  allTheStocksData = [];
+	  for(var i = 0; i<tempMatrix.length; i++){
+    	matrixTemp = tempMatrix[i].split("^");
+		matrixTempI = [];
+		for(var j = 0; j<matrixTemp.length; j++){
+	    	matrixTempI[matrixTempI.length]= matrixTemp[j].split(",");
+		}
+		allTheStocksData[allTheStocksData.length]= [allTheStocksNames[i],matrixTempI];
+	  }
+	  stocks = rawData[1].split("^");
 	  newLine = null;
 	  var i = 0;
 	  while(i<stocks.length){
@@ -48,6 +61,8 @@ function loadStocks(){
 			zAxis[j] = parseInt(zAxisR[j]);
 		}
 		var newLine = new Line(xAxis, yAxis, zAxis, allTheStocksColors.items()[i][1]);
+		//add the indexes to a new array element in stocks Array
+		//stocksArray[stocksArray.length] = [allTheStocksNames[i],xAxis, yAxis, zAxis];
 		// newLine.indexStock = currentLineIndex;
 		// currentLineIndex += 1;
 		//stockIndexes[i] = allTheStocks[i];
@@ -70,3 +85,22 @@ function cleanGraph(){
 		allTheLines.children.remove(i);
 	}
 }	
+
+function onDocumentMouseDown(event){
+	//event.preventDefault();
+	if(pointSelected==true){
+		indexSelected = allTheLines.children.indexOf(intersectedObject.object);
+		//selectedPointLOL = allTheStocksData[indexSelected];
+		selectedPointLOL = allTheStocksData[indexSelected][1][parseInt(allTheStocksData[indexSelected][1].length/130.0*intersectedObject.point.x)];
+		$stocksDisplay = $("#stockDisplay");
+		$stocksDisplay.find("#date span").text(selectedPointLOL[0]);
+		$stocksDisplay.find("#open span").text(selectedPointLOL[1]);
+		$stocksDisplay.find("#high span").text(selectedPointLOL[2]);
+		$stocksDisplay.find("#low span").text(selectedPointLOL[3]);
+		$stocksDisplay.find("#close span").text(selectedPointLOL[4]);
+		$stocksDisplay.find("#vol span").text(selectedPointLOL[5]);
+		$stocksDisplay.find("#stock span").text(allTheStocksData[indexSelected][0]);
+		$stocksDisplay.find("#growth span").text(String((intersectedObject.point.z/130.0*100.0).toFixed(2))+"%");
+	}
+}
+document.addEventListener('mousedown',onDocumentMouseDown, false);
