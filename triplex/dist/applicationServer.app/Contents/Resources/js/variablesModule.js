@@ -1,1 +1,0 @@
-/Users/jesusandrescastanedasosa/PycharmProjects/triplex-project/triplex-code/triplex/js/variablesModule.js

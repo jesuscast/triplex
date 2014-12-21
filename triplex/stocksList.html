@@ -8,8 +8,9 @@
                 <button type="submit" class="btn btn-primary btn-sm">Add</button>
             </div>
         </form>
-        <ul data-bind="foreach : listTask" class="margin-top-10">
-            <li class="padding-bottom-5"><span data-bind="text: title, visible: !editable(), click: $parent.toggleEditableList"></span>
+        <ul data-bind="foreach : listTask">
+            <li>
+                <span data-bind="text: title, visible: !editable(), click: $parent.toggleEditableList"></span>
                 <input data-bind="value: title, visible: editable, hasFocus: editable" />
                 </span>
                 <button class="btn btn-sm" data-bind="click: $parent.showList">Show</button>
@@ -18,7 +19,7 @@
     </div>
     <div id="listItems" data-bind="visible: itemsListVisible">
         <form data-bind="submit: addTask">
-            <div class="margin-top-10">Add task:
+            <div>Add task:
                 <input data-bind="value: newTaskText" placeholder="What needs to be done?" />
                 <button type="submit" class="btn btn-primary btn-sm">Add</button>
             </div>
