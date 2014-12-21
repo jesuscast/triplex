@@ -4,6 +4,10 @@ import bottle
 import yahoostocks as ys
 import datetime
 import random
+<<<<<<< HEAD
+=======
+
+>>>>>>> a20a3a77320cf046579caffff1d740e950de19cb
 import algorithmStocks as algorithmStocks
 import webbrowser
 #Global variables
@@ -78,6 +82,10 @@ def retrieveStocks(stocks_id):
 @app.route('/stocks-xyz/<stocks_id>')
 def yodude(stocks_id):
 	return algorithmStocks.sectorBezier(stocks_id)
+
+@app.route('/returnarray')
+def yodude():
+	return [1,2,3,[4,23,[123,213,123,123,123]]]
 
 #Route main page
 @app.route('/')

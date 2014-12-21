@@ -92,7 +92,7 @@ def sectorBezier(stocks_id):
 	graphRange = 130.0
 	#---- retrieve stocks information
 	for stock in stocksList:
-		stocks.append(ys.historical(stock, {'month':1, 'day': 1, 'year':2014},{'month':4, 'day': 20, 'year':2014}))
+		stocks.append(ys.historical(stock, {'month':12, 'day': 1, 'year':2014},{'month':12, 'day': 13, 'year':2014})[::-1])
 	#---- find the limits of the stocks so the x, y, and z axis match in length for all stocks
 	#---- this also finds the extrema for the prices so we could normalize the graph
 	for i in range(stocksLength):
@@ -217,4 +217,23 @@ def sectorBezier(stocks_id):
 	#---- repeats the last value so we don't miss anything
 	# finalAxis[i][2].append(processedData[i][2][-1])
 	# print # printList(processedData)
-	return '^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(finalAxis)])
+	lol = ""
+	lenI = len(stocks)
+	for i in range(lenI):
+		tempStrJ = ""
+		lenJ = len(stocks[i])
+		for j in range(lenJ):
+			tempStr = ""
+			lenK = len(stocks[i][j])
+			for k in range(lenK):
+				tempStr += str(stocks[i][j][k])
+				if(k!=(lenK-1)):
+					tempStr += ","
+			tempStrJ += tempStr
+			if(j!=(lenJ-1)):
+				tempStrJ += "^"
+		lol += tempStrJ
+		if(i!=(lenI-1)):
+			lol += "###"
+	#lol = "^".join([",".join(n) for n in [ [str(n) for n in k] for k in stocks]])
+	return lol+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(finalAxis)])
