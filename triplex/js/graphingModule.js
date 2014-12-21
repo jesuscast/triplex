@@ -225,40 +225,23 @@ function initGraphing() {
             }));
         return mesh;
     }
-    var z_Label = makeTextSprite("Growth", {});
-    z_Label.scale.normalize().multiplyScalar(1);
-    z_Label.position.set(160, 0, 65);
-    z_Label.rotation.y = 0; //10.95;
-    z_Label.name = "Hello Label";
-    // Hello_Label.id = "HL";
 
-    scene.add(z_Label);
-    var y_Label = makeTextSprite("Price", {});
-    y_Label.scale.normalize().multiplyScalar(1);
-    y_Label.position.set(-20, 65, 130);
-    y_Label.rotation.y = 0; //10.95;
-    y_Label.name = "Hello Label";
-    // Hello_Label.id = "HL";
 
-    scene.add(y_Label);
-    var x_Label = makeTextSprite("Time", {});
-    x_Label.scale.normalize().multiplyScalar(1);
-    x_Label.position.set(65, -5, 130);
-    x_Label.rotation.y = 0; //10.95;
-    x_Label.name = "Hello Label";
-    // Hello_Label.id = "HL";
 
-    scene.add(x_Label);
 
-    /*
-    gf
-    fg
-    f
-    f
-    fg
-    f
-    */
+    xMarks = createText2D('Growth', 'black', null, 30);
+    xMarks.position.set(160, 0, 65);
+    scene.add(xMarks);
 
+    yMarks = createText2D('Price', 'black', null, 30);
+    yMarks.position.set(-20, 65, 130);
+    scene.add(yMarks);
+
+    zMarks = createText2D('Time', 'black', null, 30);
+    zMarks.position.set(65, -5, 130);
+    scene.add(zMarks);
+
+    
     //scene.add(particles);
     //KEYBOARD BINDINGS
     KeyboardJS.on('left', function() {
@@ -340,6 +323,9 @@ function renderGraphing() {
             pointSelected = false;
             intersectedObject = null;
         }
+        xMarks.quaternion.copy( camera.quaternion );
+        yMarks.quaternion.copy( camera.quaternion );
+        zMarks.quaternion.copy( camera.quaternion );
         renderer.render(scene, camera);
     }
     /*------------
@@ -366,3 +352,49 @@ function setCameraPosition() {
     //sprite1.position.set( event.clientX, event.clientY - 20, 0 );
 }
 
+
+function createTextCanvas(text, color, font, size) {
+
+    size = size || 24;
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    var fontStr = (size + 'px ') + (font || 'Arial');
+    ctx.font = fontStr;
+    var w = ctx.measureText(text).width;
+    var h = Math.ceil(size);
+
+    canvas.width = w;
+    canvas.height = h;
+
+    ctx.font = fontStr;
+
+    ctx.fillStyle = color || 'black';
+    ctx.fillText(text, 0, Math.ceil(size * 0.8));
+
+    return canvas;
+
+}
+
+function createText2D(text, color, font, size, segW, segH) {
+
+    var canvas = createTextCanvas(text, color, font, size);
+    var plane = new THREE.PlaneGeometry(canvas.width, canvas.height, segW, segH);
+    var tex = new THREE.Texture(canvas);
+
+    tex.needsUpdate = true;
+
+    var planeMat = new THREE.MeshBasicMaterial({
+        map: tex,
+        color: 0xffffff,
+        transparent: true
+    });
+
+    var mesh = new THREE.Mesh(plane, planeMat);
+    mesh.scale.set(0.2, 0.2, 0.2);
+    //mesh.doubleSided = true; // this is no longer a property of mesh // CHANGED
+    //mesh.quaternion = camera.quaternion; // CHANGED
+    mesh.quaternion.copy( camera.quaternion );
+    //mesh.quaternion(new THREE.Vecto3(xCameraPosition + radiusCamera * (Math.cos(alphaAngle) * Math.cos(betaAngle)), yCameraPosition + radiusCamera * Math.sin(betaAngle), zCameraPosition + radiusCamera * (Math.cos(betaAngle) * Math.sin(alphaAngle))));
+    return mesh;
+
+}
