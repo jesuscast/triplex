@@ -60,7 +60,7 @@ function loadStocks(){
 			yAxis[j] = parseInt(yAxisR[j]);
 			zAxis[j] = parseInt(zAxisR[j]);
 		}
-		var newLine = new Line(xAxis, yAxis, zAxis, allTheStocksColors.items()[i][1]);
+		var newLine = new Line(xAxis, zAxis, yAxis, allTheStocksColors.items()[i][1]);
 		//add the indexes to a new array element in stocks Array
 		//stocksArray[stocksArray.length] = [allTheStocksNames[i],xAxis, yAxis, zAxis];
 		// newLine.indexStock = currentLineIndex;
@@ -100,7 +100,7 @@ function onDocumentMouseDown(event){
 		$stocksDisplay.find("#close span").text(selectedPointLOL[4]);
 		$stocksDisplay.find("#vol span").text(selectedPointLOL[5]);
 		$stocksDisplay.find("#stock span").text(allTheStocksData[indexSelected][0]);
-		$stocksDisplay.find("#growth span").text(String((intersectedObject.point.z/130.0*100.0).toFixed(2))+"%");
+		$stocksDisplay.find("#growth span").text(String((intersectedObject.point.y/130.0*100.0).toFixed(2))+"%");
 	}
 }
 document.addEventListener('mousedown',onDocumentMouseDown, false);
