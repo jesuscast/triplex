@@ -229,11 +229,11 @@ function initGraphing() {
 
 
 
-    xMarks = createText2D('Growth', 'black', null, 30);
+    xMarks = createText2D('Price', 'black', null, 30);
     xMarks.position.set(160, 0, 65);
     scene.add(xMarks);
 
-    yMarks = createText2D('Price', 'black', null, 30);
+    yMarks = createText2D('Growth', 'black', null, 30);
     yMarks.position.set(-20, 65, 130);
     scene.add(yMarks);
 
