@@ -116,4 +116,18 @@ body {
   height: 20px;
   float: left;
 }
+.container {
+  height: 100%;
+  overflow: hidden;
+}
+#options {
+  position: absolute;
+  height: 100%;
+  left: 0;
+  overflow: scroll;
+}
+#graph {
+  position: absolute;
+  left: 23%;
+}
 /*# sourceMappingURL=style.css.map */
