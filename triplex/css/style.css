@@ -65,7 +65,7 @@ body {
     .container section#options h1 {
       font-size: 1.8em;
       text-align: center;
-      margin: 15px auto 0 auto; }
+      margin: 15px auto; }
     .container section#options h2 {
       font-size: 1.2em;
       text-align: center; }
@@ -118,3 +118,4 @@ body {
       overflow: hidden;
       width: 100%;
       height: 75%; }
+/*# sourceMappingURL=style.css.map */
