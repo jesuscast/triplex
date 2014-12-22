@@ -48,7 +48,6 @@ table {
 body {
   font-family: "adelle-sans", sans-serif;
   background-color: white;
-  margin: 0px;
   overflow: hidden; }
 
 .container {
@@ -62,31 +61,55 @@ body {
     width: 22%;
     border-right: 4px solid #34495e;
     text-align: center; }
-    .container section#options form {
-      margin-top: 50px; }
+    .container section#options h1 {
+      font-size: 1.8em;
+      text-align: center;
+      margin: 15px auto; }
+    .container section#options h2 {
+      font-size: 1.2em;
+      text-align: center; }
+    .container section#options form .selectPeriod {
+      border: 3px solid black;
+      border-radius: 5px;
+      padding: 5% 3%;
+      width: 80%;
+      margin: 15px auto;
+      margin: 0 auto; }
+      .container section#options form .selectPeriod input {
+        margin: 10px auto 0 auto; }
+      .container section#options form .selectPeriod input[placeholder] {
+        font-size: 0.8em;
+        padding: 2%; }
+    .container section#options form .selectStocks {
+      border: 3px solid black;
+      border-radius: 5px;
+      padding: 5% 3%;
+      width: 80%;
+      margin: 15px auto; }
+      .container section#options form .selectStocks input {
+        margin: 15px auto; }
+      .container section#options form .selectStocks input[placeholder] {
+        font-size: 0.8em;
+        padding: 1%; }
+      .container section#options form .selectStocks #stocksList {
+        list-style: none;
+        padding: 0px; }
+        .container section#options form .selectStocks #stocksList li {
+          padding: 10px 0px 10px 0px;
+          border-bottom: 1px solid #e6e6e6; }
+    .container section#options #stockDisplay {
+      border: 3px solid black;
+      border-radius: 5px;
+      padding: 5% 3%;
+      width: 80%;
+      margin: 15px auto; }
+      .container section#options #stockDisplay ul {
+        margin: 15px auto 0 auto; }
   .container section#graph {
     width: 75%; }
     .container section#graph #graphCanvas {
       position: absolute;
       width: 100%;
       height: 75%; }
-
-form, select, option {
-  margin: 0px;
-  padding: 0px; }
-
-.selectStocks {
-  margin-top: 30px; }
-  .selectStocks #stocksList {
-    list-style: none;
-    padding: 0px; }
-    .selectStocks #stocksList li {
-      padding: 10px 0px 10px 0px;
-      border-bottom: 1px solid #e6e6e6; }
-
-.colorcube {
-  width: 50px;
-  height: 20px;
-  float: left; }
 
 /*# sourceMappingURL=style.css.map */
