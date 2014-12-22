@@ -4,10 +4,17 @@ $main: "adelle-sans",sans-serif;
 
 $optional: "jaf-facitweb",sans-serif;
 
+@mixin main_container {
+	border: 3px solid black;
+	border-radius: 5px;
+	padding: 5% 3%;
+	width: 80%;
+	margin: 15px auto;
+}
+
 body {
     font-family: $main;
     background-color: white;
-    margin: 0px;
     overflow: hidden;
 }
 
@@ -26,37 +33,73 @@ body {
 	    border-right: 4px solid #34495e;
 	    text-align: center;
 
+	    h1 {
+	    	font-size: 1.8em;
+	    	text-align: center;
+	    	margin: 15px auto;
+	    }
+
+	    h2 {
+	    	font-size: 1.2em;
+	    	text-align: center;
+	    }
+
 	    form {
-	    	margin-top: 50px;
+
+	    	.selectPeriod {
+	    		@include main_container;
+	    		margin: 0 auto;
+
+	    		input {
+	    			margin: 10px auto 0 auto;
+	    		}
+
+	    		input[placeholder] {
+	    			font-size: 0.8em;
+	    			padding: 2%;
+	    		}
+	    	}
+
+	    	.selectStocks {
+	    		@include main_container;
+
+	    		input {
+	    			margin: 15px auto;
+	    		}
+
+	    		input[placeholder] {
+	    			font-size: 0.8em;
+	    			padding: 1%;
+	    		}
+
+	    		 #stocksList {
+				    list-style: none;
+				    padding: 0px;
+
+				    li {
+					    padding: 10px 0px 10px 0px;
+					    border-bottom: 1px solid #e6e6e6;
+					}
+				}
+	    	}
+		}
+
+		#stockDisplay {
+			@include main_container;
+
+			ul {
+				margin: 15px auto 0 auto;
+			}
 		}
 	}
 
 	section#graph {
-	    width: 75%;
+    width: 75%;
 
 	    #graphCanvas {
 		    position: absolute;
 		    width: 100%;
 		    height: 75%;
-		}
-	}
-}
-
-form, select, option {
-    margin: 0px;
-    padding: 0px;
-}
-
-.selectStocks {
-    margin-top: 30px;
-
-    #stocksList {
-	    list-style: none;
-	    padding: 0px;
-
-	    li {
-		    padding: 10px 0px 10px 0px;
-		    border-bottom: 1px solid #e6e6e6;
 		}
 	}
 }

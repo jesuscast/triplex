@@ -20,10 +20,15 @@
     <script>try{Typekit.load();}catch(e){}</script>
     <!--END FONTS-->
     <!--STYLES-->
+<<<<<<< HEAD
 
     <link rel="stylesheet" type="text/css" href="css/theme.css" />
     <!-- <link rel="stylesheet" type="text/css" href="css/datepickr.css" /> -->
     <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css"/ >
+=======
+    <link rel="stylesheet" type="text/css" href="css/datepickr.css" />
+
+>>>>>>> 8c91d12811620352a7f1995352589ee9c40fe078
     <link rel="stylesheet" type="text/css" href="css/style.css" />
 
     <!--END STYLES-->
@@ -32,13 +37,17 @@
 <body>
     <div class="container">
         <section id="options">
+            <h1>Welcome to Triplex</h1> 
             <form>
-                <label>Select a Period of time:</label><br /><br />
-                From <input type="text" id="fromDatePicker" val><br />
-                To <input type="text" id="toDatePicker">    
+
+                <div class="selectPeriod">
+                    <h2>Select a Time Frame</h2>
+                    <input type="text" id="fromDatePicker" placeholder="From">
+                    <input type="text" id="toDatePicker" placeholder="To">    
+                </div>
                 <div class="selectStocks">
-                    <label>Add Stocks </br> (Write the stock symbol)</label>
-                    <input type="text" id="stockInput" />
+                    <h2>Add Your Stocks</h2>
+                    <input type="text" id="stockInput" placeholder="Insert a Ticker Symbol"/>
                     <input type="button" id="addStockBtn" value="add" />
                     <ul id="stocksList">
 
@@ -46,15 +55,16 @@
                 </div>
             </form>
             <div id="stockDisplay">
+                <h2>Stock Analysis</h2>
                 <ul>
-                    <li id="stock">Stock <span></span></li>
-                    <li id="date">Date <span>0.0</span></li>
-                    <li id="open">Open <span>0.0</span></li>
-                    <li id="close">Close <span>0.0</span></li>
-                    <li id="low">Low <span>0.0</span></li>
-                    <li id="high">High <span>0.0</span></li>
-                    <li id="vol">Vol <span>0.0</span></li>
-                    <li id="growth">Growth <span>0.0%</span></li>
+                    <li id="stock">Stock : <span></span></li>
+                    <li id="date">Date : <span>0.0</span></li>
+                    <li id="open">Open : <span>0.0</span></li>
+                    <li id="close">Close : <span>0.0</span></li>
+                    <li id="low">Low : <span>0.0</span></li>
+                    <li id="high">High : <span>0.0</span></li>
+                    <li id="vol">Vol : <span>0.0</span></li>
+                    <li id="growth">Growth : <span>0.0%</span></li>
                 </ul>
             </div>
         </section>
