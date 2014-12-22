@@ -18,6 +18,8 @@ var upPressed = false;
 var downPressed = false;
 var mousePressed = false;
 var pointSelected = false;
+var fromDate = [];
+var toDate = [];
 //for retrieving the stocks
 var allTheStocksData = [];
 //end for retrieving the stocks

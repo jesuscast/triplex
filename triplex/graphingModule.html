@@ -22,8 +22,8 @@
     <!--STYLES-->
 
     <link rel="stylesheet" type="text/css" href="css/theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/datepickr.css" />
-
+    <!-- <link rel="stylesheet" type="text/css" href="css/datepickr.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css"/ >
     <link rel="stylesheet" type="text/css" href="css/style.css" />
 
     <!--END STYLES-->
@@ -34,7 +34,7 @@
         <section id="options">
             <form>
                 <label>Select a Period of time:</label><br /><br />
-                From <input type="text" id="fromDatePicker"><br />
+                From <input type="text" id="fromDatePicker" val><br />
                 To <input type="text" id="toDatePicker">    
                 <div class="selectStocks">
                     <label>Add Stocks </br> (Write the stock symbol)</label>
@@ -69,10 +69,19 @@
     <script src="js/graphingModule.js"></script>
     <script src="js/connectorModule.js"></script>
     <script src="js/actionsModule.js"></script>
-    <script src="js/datepickr.js"></script>
+    <!-- <script src="js/datepickr.js"></script>-->
+    <script src="js/jquery.datetimepicker.js"></script>
     <script>
-        datepickr('#fromDatePicker');
-        datepickr('#toDatePicker');
+        // datepickr('#fromDatePicker', { dateFormat: 'm-d-Y' });
+        // datepickr('#toDatePicker', { dateFormat: 'm-d-Y' });
+        $('#fromDatePicker').datetimepicker({
+            timepicker: false,
+            format: 'm-d-Y'
+        });
+        $('#toDatePicker').datetimepicker({
+            timepicker: false,
+            format: 'm-d-Y'
+        });
     </script>
 </body>
 

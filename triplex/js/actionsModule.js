@@ -28,7 +28,7 @@ animateGraphing();
 
 function loadStocks(){
 	allTheStocksNames = allTheStocks.items();
-	$.get( "stocks-xyz/"+allTheStocksNames.join()+"?fromDate=1,12,2014&toDate=10,12,2014", function( data ) {
+	$.get( "stocks-xyz/"+allTheStocksNames.join()+"?fromDate="+fromDate[1]+","+fromDate[0]+","+fromDate[2]+"&toDate="+String(parseInt(toDate[1]))+","+toDate[0]+","+toDate[2], function( data ) {
 	  //clean the previous array of stocks
 	  stocksArray = new Array();
 	  initGraphing();

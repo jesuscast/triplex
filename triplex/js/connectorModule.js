@@ -32,6 +32,49 @@ $(function() {
         //alert($("#stockInput").val());
 
     });
+    today = new Date();
+    $("#toDatePicker").val(String(today.getMonth()+1)+"-"+String(today.getDate())+"-"+String(today.getFullYear()));
+    $("#fromDatePicker").val(String(today.getMonth()+1)+"-"+String(today.getDate()-14)+"-"+String(today.getFullYear()));
+    refreshDates();
+    $("#fromDatePicker, #toDatePicker").on('change', function(){
+        //alert();
+        refreshDates();
+    });
+    function refreshDates(){
+        fromDate = $("#fromDatePicker").val().split("-");
+        toDate = $("#toDatePicker").val().split("-");
+        doIt = false;
+        if(parseInt(fromDate[2])<parseInt(toDate[2])){
+            doIt = true;
+        }
+        else if(parseInt(fromDate[2])==parseInt(toDate[2])){
+            if(parseInt(fromDate[0])<parseInt(toDate[0])){
+                doIt = true;
+            }
+            else if(parseInt(fromDate[0])==parseInt(toDate[0])){
+                if(parseInt(fromDate[1])<parseInt(toDate[1])){
+                    doIt = true;
+                }
+                else {
+                    alert("The day is greater or the same")
+                }
+            }
+            else {
+                alert("The month of the first date is greater");
+            }
+        }
+        else {
+            alert("The year of the first date is greater");
+        }
+        if(doIt==true){
+            //alert("lol");
+            cleanGraph();
+            loadStocks();
+        }
+        else {
+            alert("non");
+        }
+    }
     function removeStockFromUL(stockName){
         $(".stocksInList[name='"+stockName+"']").remove();
     }
