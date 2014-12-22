@@ -229,11 +229,11 @@ function initGraphing() {
 
 
 
-    xMarks = createText2D('Price', 'black', null, 30);
+    xMarks = createText2D('Yield', 'black', null, 30);
     xMarks.position.set(160, 0, 65);
     scene.add(xMarks);
 
-    yMarks = createText2D('Growth', 'black', null, 30);
+    yMarks = createText2D('competitive margin', 'black', null, 30);
     yMarks.position.set(-20, 65, 130);
     scene.add(yMarks);
 
@@ -362,7 +362,17 @@ function createTextCanvas(text, color, font, size) {
     ctx.font = fontStr;
     var w = ctx.measureText(text).width;
     var h = Math.ceil(size);
+    if(w>100){
+        canvas.width = 160;
+    canvas.height = 60;
 
+    ctx.font = fontStr;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = color || 'black';
+    ctx.fillText("competitive", 80, Math.ceil(size * 0.8));
+    ctx.fillText("margin", 80, Math.ceil(size * 0.8)+28);
+    }
+    else {
     canvas.width = w;
     canvas.height = h;
 
@@ -370,7 +380,7 @@ function createTextCanvas(text, color, font, size) {
 
     ctx.fillStyle = color || 'black';
     ctx.fillText(text, 0, Math.ceil(size * 0.8));
-
+    }
     return canvas;
 
 }
