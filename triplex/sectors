@@ -1,0 +1,28 @@
+file = open('s_conameu.csv','r')
+fileR = file.read()
+fileL = fileR.split("\n")
+sectors = {}
+for i in range(1, len(fileL)-1):
+	currentSector = fileL[i].split(",")[0].replace('"','')
+	sectors[currentSector] = [] 
+	file2 = open(str(i)+'conameu.csv','r')
+	file2R = file2.read()
+	file2L = fileR.split("\n")
+	for j in range(1, len(file2L)-1):
+		currentIndustry = file2L[j].split(",")[0].replace('"','')
+		sectors[currentSector].append(currentIndustry)
+
+
+sectors = [\
+"Basic Materials",\
+"Conglomerates",\
+"Consumer Goods",\
+"Financial",\
+"Healthcare",\
+"Industrial Goods",\
+"Services",\
+"Technology",\
+"Utilities"\
+]
+
+sectors = {'Financial': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Conglomerates': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Healthcare': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Utilities': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Consumer Goods': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Industrial Goods': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Services': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Basic Materials': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities'], 'Technology': ['Basic Materials', 'Conglomerates', 'Consumer Goods', 'Financial', 'Healthcare', 'Industrial Goods', 'Services', 'Technology', 'Utilities']}
