@@ -27,7 +27,8 @@ for key in sectors:
 			for indexT in range(1, len(listRawTemp)-1):
 				try:
 					print "------"+u"\u2713"+" Stock Added"
-					stocks.append(listRawTemp[indexT].split(",")[0].replace('"',''))
+					namme=str(listRawTemp[indexT].split(",")[0]).replace('"','')
+					stocks.append(namme)
 				except:
 					print "------"+u"\u2717"+" Stock Added Failed to add"
 			newSectors[key].append({industry:stocks})
