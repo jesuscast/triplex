@@ -1,0 +1,1 @@
+source triplex/backend/environment/bin/activate && python triplex/connector.py
