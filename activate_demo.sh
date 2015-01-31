@@ -1,1 +1,0 @@
-source envpython/bin/activate

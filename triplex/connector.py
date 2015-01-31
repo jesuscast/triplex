@@ -39,6 +39,7 @@ def server_static_css(images_file):
 
 #Route the latest realtime stocks from today and put axis in the specific coordinates bro
 @app.route('/realtimestocks/<stocks_id>')
+def realtime():
 	return realtimeStocks.retrieveStocks(stocks_id)
 
 #Retrieves the stocks xyz axis using a polynomial fit
@@ -50,7 +51,6 @@ def yodude(stocks_id):
 @app.route('/')
 def hello():
 	return bottle.static_file("graphingModule.html", root=path_to('frontend'))
-	#return "HELLO FAKA"
 
 
 #Init calls
