@@ -1,0 +1,32 @@
+Remote Address:216.115.107.207:80
+Request URL:http://finance.yahoo.com/_td_charts_api/resource/charts;comparisonTickers=;events=div%7Csplit%7Cearn;gmtz=-5;indicators=quote;period1=1422392708;period2=1422738308;queryString=%7B%22s%22%3A%22GOOG%2BInteractive%22%7D;range=1d;rangeSelected=undefined;ticker=GOOG;useMock=false?crumb=%2FNnXZqZT%2Fpi
+Request Method:GET
+Status Code:200 OK
+Request Headersview source
+Accept:*/*
+Accept-Encoding:gzip, deflate, sdch
+Accept-Language:en-US,en;q=0.8,es;q=0.6,fr;q=0.4
+Connection:keep-alive
+Content-Type:application/json
+Cookie:V=v=0.7&m=1&ccOptions=%7B%22show%22%3Afalse%2C%22lang%22%3A%22en%22%2C%22fontSize%22%3A24%2C%22fontName%22%3A%22Helvetica%20Neue%2CHelvetica%2CArial%2C_sans%22%2C%22fontColor%22%3A%22%23ffffff%22%2C%22fontOpacity%22%3A1%2C%22fontEffect%22%3A%22none%22%2C%22bgColor%22%3A%22%23000000%22%2C%22bgOpacity%22%3A0.75%7D; AO=u=1; B=45ao6bpa75a7h&b=4&d=t3Cgg95pYFo0kLO2COaSFA--&s=v8&i=xqogd0CxVg34lI1X0jz.; F=a=wPQtWV0MvSzWOfdi7xEFKF2a.FwQki_.x2d22XRSKutz5wOk9flLeJO6bRVAHeHRVrPqYLI-&b=gLp9; PH=fn=Skgk5bXmqx7maH3KS1nc&l=en-US&i=us; ywandp=1000911397279%3A916720109; fpc=1000911397279%3AZc8fB2pf%7C%7C; PRF=&t=GOOG
+Host:finance.yahoo.com
+Referer:http://finance.yahoo.com/echarts?s=GOOG+Interactive
+User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.94 Safari/537.36
+X-Requested-With:XMLHttpRequest
+Query String Parametersview sourceview URL encoded
+crumb:/NnXZqZT/pi
+Response Headersview source
+Age:0
+Cache-Control:private
+Connection:keep-alive
+Content-Encoding:gzip
+Content-Type:application/json; charset=utf-8; charset=utf-8
+Date:Sat, 31 Jan 2015 21:05:08 GMT
+ETag:W/"eSb7YwMU1SxU0ARv5UCZVA=="
+Server:ATS
+Transfer-Encoding:chunked
+Vary:X-Ssl
+Via:http/1.1 media-border148.global.media.gq1.yahoo.com (ApacheTrafficServer [cMsSf ]), http/1.1 r7.ycpi.lax.yahoo.net (ApacheTrafficServer [cMsSf ])
+X-Content-Type-Options:nosniff
+X-Frame-Options:SAMEORIGIN
+X-XSS-Protection:1; mode=block
