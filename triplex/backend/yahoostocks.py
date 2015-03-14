@@ -59,6 +59,7 @@ def historical(stock='GOOG', from_date={'month':1, 'day': 1, 'year':2014}, to_da
                 + "&ignore=" + request_info['params']['ignore']
     stocks_information = requests.get(final_url)
     if stocks_information.status_code == requests.codes.ok:
+        #print final_url
         result = [[item.replace('\"','') for item in this_stock.split(',')] for this_stock in stocks_information.text.split('\n')]
         result.pop(0)
         result.pop(len(result)-1)
