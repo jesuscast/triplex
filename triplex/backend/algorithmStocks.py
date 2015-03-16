@@ -1,6 +1,41 @@
 import yahoostocks as ys
 import types
 import bezier
+import time
+import datetime
+import json
+import os
+
+
+path = os.getcwd()
+inF = open(path+"/triplex/backend/download_data/stocks_and_their_sector.json","r")
+stocks_n_sector = json.loads(inF.read())
+inF.close()
+print "lllll"
+
+def stockFromFiles(stock_id):
+	pathT = os.getcwd().replace("triplex-code","download_data/historical_prices/")
+	stockF = open(pathT+stock_id+".txt","r")
+	stockJ = json.loads(stockF.read())
+	stockF.close()
+	#keys 
+	#[u'debug', u'isValidRange', u'data', u'isLegacy']
+	# 	stockJ[u'data'].keys()
+	# [u'indicators', u'timestamp', u'meta', u'events']
+	#stockJ[u'data'][u'indicators'].keys()
+	# stockJ[u'data'][u'indicators'].keys()
+	# [u'quote']
+	# stockJ[u'data'][u'indicators'][u'quote']
+	#stockJ[u'data'][u'indicators'][u'quote'][0]
+	#stockJ[u'data'][u'indicators'][u'quote'][0].keys()
+	#[u'high', u'close', u'open', u'low', u'volume']
+	#stockJ[u'data'][u'indicators'][u'quote'][0][u'close']
+	finalF = []
+	for i in range(len(stockJ[u'data'][u'timestamp'])):
+		finalF.append([])
+		finalF[i] = [ stockJ[u'data'][u'timestamp'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'open'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'high'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'low'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'close'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'volume'][i]]
+	return finalF
+
 def getY(points, pointsRequested):
 	lPoints = len(points)
 	newPoints = []
@@ -78,6 +113,8 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 	x,y,z = 0,1,2
 	fromDate = day, month, year
 	toDate = day, month, year
+
+	[times, changes, prices]
 	'''
 	#---- separate the list of stocks
 	stocksList = stocks_id.split(',')
@@ -86,151 +123,81 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 	#---- set Variables
 	maxP = -10000.0
 	minP = 100000.0
+	minC = 10000.0
+	maxC = -10000.0
 	#---- initiate Variables
+	stocksRaw = []
 	stocks = []
 	processedData = []
-	changesZ = []
+	#changesZ = []
 	stocksLength = len(stocksList)
 	shortestStockIndex = 0
 	rangePrices = 0.0
 	graphRange = 130.0
+	rangeChanges = 0.0
 	#---- retrieve stocks information
+	#---- just draw the curve
 	for stock in stocksList:
-		stocks.append(ys.historical(stock, {'month':fromDate[1], 'day': fromDate[0], 'year':fromDate[2]},{'month':toDate[1], 'day': toDate[0], 'year':toDate[2]})[::-1])
+		#stockR = ys.historical(stock, {'month':fromDate[1], 'day': fromDate[0], 'year':fromDate[2]},{'month':toDate[1], 'day': toDate[0], 'year':toDate[2]})[::-1]
+		stockR = stockFromFiles(stock)
+		stockT  = stock_in_sector(stock, fromDate, toDate, stockR)
+		stocksRaw.append(stockR)
+		curve = bezier.Curve()
+		timesAll = range(len(stockT['times']))
+		#print ",".join([ str(n) for n in times ])
+		#return "----p"+str(stockT['prices'][0])+"q--"
+		curve.draw(zip(timesAll,stockT['changes']), 3)
+		xAxis = [ n[0] for n in curve.result ]
+		yAxis = [ n[1] for n in curve.result ]
+		zAxis = getY(zip(timesAll,stockT['prices']), xAxis)
+		stocks.append([xAxis, yAxis, zAxis])
+		print timesAll
+		print stockT['prices']
+		print len(xAxis)
+		print len(yAxis)
+		print len(zAxis)
 	#---- find the limits of the stocks so the x, y, and z axis match in length for all stocks
 	#---- this also finds the extrema for the prices so we could normalize the graph
 	for i in range(stocksLength):
 		if len(stocks[shortestStockIndex])>len(stocks[i]):
 			shortestStockIndex = i
-		for j in range(len(stocks[i])):
-			temp = float(stocks[i][j][1])
+		for j in range(len(stocks[i][0])):
+			temp = stocks[i][2][j]
 			if temp > maxP:
 				maxP = temp
 			if temp < minP:
 				minP = temp
-	# minP -= 50
-	# print "shortestStockIndex:"+str(shortestStockIndex)
-	#---- now that we have the shortestStockIndex we can set a limits to normalize the x axis
+			#calculate the range in changes
+			tempC = stocks[i][1][j]
+			if tempC > maxC:
+				maxC = temp
+			if tempC < minC:
+				minC = tempC
+
 	minT = 0.0
 	maxT = float(len(stocks[shortestStockIndex]))
 	axisLimit = int(maxT)
+	rangeChanges = graphRange/(maxC-minC)
 	rangePrices = graphRange/(maxP-minP)
 	rangeT = graphRange/(maxT-minT)
-	# print "maxT:"+str(maxT)
-	#---- creates the axis values
-	for i in range(stocksLength):
-		#---- initialize variables
-		xAxis = []
-		yAxis = []
-		processedData.append([])
-		processedData[i].append([])
-		processedData[i].append([])
-		processedData[i].append([])
-		changesZ.append([])
-		changesZ[i].append(0)
-		for j in range(axisLimit):
-			#thisTime = datetime.datetime.fromtimestamp(float(stocks[i][j][0]))
-			#xAxis.append(str(((thisTime.hour*60+thisTime.minute-60*9)/3)-minT))
-			if j!=0:
-				xAxis.append(rangeT*float(j))
-			else:
-				xAxis.append((0.0))
-			yAxis.append(((float(stocks[i][j][1])-minP)*rangePrices))
-			if j!=0:
-				changesZ[i].append(\
-					float(stocks[i][j][1])-\
-					float(stocks[i][0][1])\
-					)
-			# ---- the following avoids retrieving stocks from the last hours
-			# if float(xAxis[len(xAxis)-1]) >= 130.0:
-			# 	break
-		# print "changesZ length:"+str(len(changesZ[i]))
-		changesZ[i][0] = changesZ[i][1]
-		processedData[i][0] = xAxis
-		processedData[i][1] = yAxis
-	# print # printList(changesZ)
-	#--- calcualtes the changes in prices
-	for j in range(1, axisLimit):
-		tot = 0.0
-		for i in range(stocksLength):
-			tot += float(changesZ[i][j])
-		# print "tot:"+str(tot)
-		for i in range(stocksLength):
-			if (changesZ[i][j] != 0) and (tot != 0):
-				# print "inside if"
-				processedData[i][2].append(\
-					float(changesZ[i][j]/tot)\
-					)
-			else:
-				# processedData[i]['z'][(len(processedData[i]['z'])-1)]
-				if i>0:
-					processedData[i][2].append((processedData[i][2][-1]))
-					# print "tot=0 or changes=0"
-				else:
-					processedData[i][2].append(0.0)
-					# print "zero here"
-	processedData[i][2].append(processedData[i][2][-1])
-	# print # printList(processedData)
-	#---- create new values using bezier curve
-	finalAxis = []
-	for i in range(len(processedData)):
-		curve = bezier.Curve()
-		curve.draw(zip(processedData[i][0],processedData[i][2]), 100)
-		newZAxis = [ n[1] for n in curve.result ]
-		newXAxis = [ n[0] for n in curve.result ]
-		newYAxis = getY(zip(processedData[i][0],processedData[i][1]), newXAxis)
-		finalAxis.append([newXAxis, newYAxis, newZAxis])
-	#---- normalizes the data in the z axis
-	#---- the r are for eliminating the crazy extrema
-	minZProcessed = 10000.0
-	maxZProcessed = -10000.0
-	maxPProcessed = -10000.0
-	minPProcessed = 10000.0
-	finalAxisLength = len(finalAxis)
-	finalAxisZLength = len(finalAxis[0][2])
-	#---- finds the limits for the z axis normalization
-	for i in range(finalAxisLength):
-		for j in range(finalAxisZLength):
-			if float(finalAxis[i][2][j]) < minZProcessed:
-				minZProcessed = float(finalAxis[i][2][j])
-			if float(finalAxis[i][2][j]) > maxZProcessed:
-				maxZProcessed = float(finalAxis[i][2][j])
-	if maxZProcessed == minZProcessed:
-		maxZProcessed = 1.0
-		minZProcessed = 0.0
-	# print "maxZ:"+str(maxZProcessed)
-	# print "minZ:"+str(minZProcessed)
-	rangeZ = graphRange/(maxZProcessed-minZProcessed)
-	for i in range(finalAxisLength):
-		for j in range(finalAxisZLength):
-			finalAxis[i][2][j] = ((float(finalAxis[i][2][j])-minZProcessed)*rangeZ)
-	#---- finds the limits for the y axis normalization
-	for i in range(finalAxisLength):
-		for j in range(finalAxisZLength):
-			if float(finalAxis[i][1][j]) < minPProcessed:
-				minPProcessed = float(finalAxis[i][1][j])
-			if float(finalAxis[i][1][j]) > maxPProcessed:
-				maxPProcessed = float(finalAxis[i][1][j])
-	if maxPProcessed == minPProcessed:
-		maxPProcessed = 1.0
-		minPProcessed = 0.0
-	rangePProcessed = graphRange/(maxPProcessed-minPProcessed)
-	for i in range(finalAxisLength):
-		for j in range(finalAxisZLength):
-			finalAxis[i][1][j] = ((float(finalAxis[i][1][j])-minPProcessed)*rangePProcessed)
-	#---- repeats the last value so we don't miss anything
-	# finalAxis[i][2].append(processedData[i][2][-1])
-	# print # printList(processedData)
+
+	for i in range(len(stocks)):
+		for j in range(len(stocks[i][0])):
+			stocks[i][0][j] = stocks[i][0][j] * rangeT
+			stocks[i][1][j] = (stocks[i][1][j]-minC)*rangeChanges
+			stocks[i][2][j] = (stocks[i][2][j]-minP)*rangePrices
+
+	origin = [0.0, -minC*rangeChanges][(minC<0.0)==True]
 	lol = ""
-	lenI = len(stocks)
+	lenI = len(stocksRaw)
 	for i in range(lenI):
 		tempStrJ = ""
-		lenJ = len(stocks[i])
+		lenJ = len(stocksRaw[i])
 		for j in range(lenJ):
 			tempStr = ""
-			lenK = len(stocks[i][j])
+			lenK = len(stocksRaw[i][j])
 			for k in range(lenK):
-				tempStr += str(stocks[i][j][k])
+				tempStr += str(stocksRaw[i][j][k])
 				if(k!=(lenK-1)):
 					tempStr += ","
 			tempStrJ += tempStr
@@ -240,4 +207,77 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 		if(i!=(lenI-1)):
 			lol += "###"
 	#lol = "^".join([",".join(n) for n in [ [str(n) for n in k] for k in stocks]])
-	return lol+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(finalAxis)])
+	return lol+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(stocks)])+"-MAXIMUMSEPARATOR-"+str(origin)
+
+
+def stock_in_sector(stock_id, fromDate, toDate, stockData):
+	#---- separate the list of stocks
+	#---- initiate Variables
+	#stockData = []
+	#---- retrieve stocks information
+	#---- substitute the first date for the timestamp
+	#--- results
+	changes = []
+	prices = []
+	times = []
+	# for i in range(0, len(stockData)):
+	# 	#timestamp
+	# 	stockData[i][0] = int(time.mktime(datetime.datetime.strptime(stockData[i][0], "%Y-%m-%d").timetuple()))
+	# 	#open
+	# 	stockData[i][1] = float(stockData[i][1])
+	# 	#high
+	# 	stockData[i][2] = float(stockData[i][2])
+	# 	#low
+	# 	stockData[i][3] = float(stockData[i][3])
+	# 	#close
+	# 	stockData[i][4] = float(stockData[i][4])
+	# 	#volume
+	# 	stockData[i][5] = int(stockData[i][5])
+	# 	#adjVolume
+	# 	#stockData[i][6] = float(stockData[i][6])
+	#---- find the stock in the sectors
+	#sector = stocks_n_sector[stock_id][1]
+	cleanNameSector = ''.join(ch for ch in stocks_n_sector[stock_id][1] if ch.isalnum())
+	#---- get the averages price of the sector
+	inFF = open(path+"/triplex/backend/download_data/sectors_organized/"+cleanNameSector+".txt","r")
+	sector_avg = json.loads(inFF.read())
+	inFF.close()
+	#---- try to create the motherfucking axis
+
+	initialTime = 1
+	initialPriceStock = 1
+	initialPriceSector = 1
+	changesStock = []
+	changesSector = []
+	i = 0
+	for price_stock in stockData:
+		timeHere = price_stock[0]
+		if str(timeHere) in sector_avg:
+			if sector_avg[str(timeHere)]!=None:
+				if i==0:
+					initialTime = timeHere
+					initialPriceStock = price_stock[4]
+					initialPriceSector = float(sector_avg[str(timeHere)])
+					i += 1
+				else:
+					changesSector.append(float(sector_avg[str(timeHere)])/initialPriceSector)
+					changesStock.append(price_stock[4]/initialPriceStock)
+					prices.append(price_stock[4])
+					times.append(price_stock[0])
+	changes = []
+	for j in range(0, len(changesStock)):
+		if (changesStock[j] > changesSector[j]) and changesStock[j] > 0 and changesSector > 0:
+			changes.append(changesStock[j] / changesSector[j])
+		elif (changesStock[j] < changesSector[j]) and changesStock[j] > 0 and changesSector > 0:
+			changes.append(- changesSector[j] / changesStock[j])
+		elif changesStock[j] > changesSector[j] and changesStock[j] < 0 and changesSector[j] < 0:
+			#negative over negative becomes positive
+			changes.append(changesSector[j] / changesStock[j])
+		elif changesStock[j] < changesSector[j] and changesStock[j] < 0 and changesSector[j] < 0:
+			changes.append(- changesStock[j] / changesSector[j])
+		elif changesStock[j] > changesSector[j] and changesStock[j] > 0 and changesSector[j] < 0:
+			changes.append(changesStock[j] / (changesStock[j] - changesSector[j]))
+		elif changesStock[j] < changesSector[j] and changesStock[j] < 0 and changesSector[j] > 0:
+			changes.append(- changesSector[j] / (changesSector[j] - changesStock[j]))
+
+	return {'times':times, 'changes':changes, 'prices':prices}

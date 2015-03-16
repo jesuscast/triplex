@@ -175,10 +175,8 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 	return lol+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(stocks)])+"-MAXIMUMSEPARATOR-"+str(origin)
 
 
-def stock_in_sector(stock_id, fromDateR, toDateR, stockData):
+def stock_in_sector(stock_id, fromDate, toDate, stockData):
 	#---- separate the list of stocks
-	fromDate = [ int(n) for n in fromDateR.split(',') ]
-	toDate = [ int(n) for n in toDateR.split(',') ]
 	#---- initiate Variables
 	stockData = []
 	#---- retrieve stocks information
