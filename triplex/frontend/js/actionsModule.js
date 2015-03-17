@@ -35,6 +35,10 @@ function loadStocks(){
 	  animateGraphing();
 	  rawData = data.split("-MAXIMUMSEPARATOR-");
 	  tempMatrix = rawData[0].split("###");
+	  origin = rawData[2].split(",")
+	  scene.remove(axesGrid)
+	  axesGrid = new AxesGrid(options.size, options.step, parseInt(origin[1]));
+	  scene.add(axesGrid)
 	  allTheStocksData = [];
 	  for(var i = 0; i<tempMatrix.length; i++){
     	matrixTemp = tempMatrix[i].split("^");

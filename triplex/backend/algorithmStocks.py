@@ -177,15 +177,15 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 		stocks[i].append( [ (n-minC)*rangeChanges for n in stock[1] ] )
 		stocks[i].append( [ (n-minP)*rangePrices for n in stock[2] ] )
 	lol = ""
-	lenI = len(stocks)
+	lenI = len(stocks_r)
 	for i in range(lenI):
 		tempStrJ = ""
-		lenJ = len(stocks[i])
+		lenJ = len(stocks_r[i])
 		for j in range(lenJ):
 			tempStr = ""
-			lenK = len(stocks[i][j])
+			lenK = len(stocks_r[i][j])
 			for k in range(lenK):
-				tempStr += str(stocks[i][j][k])
+				tempStr += str(stocks_r[i][j][k])
 				if(k!=(lenK-1)):
 					tempStr += ","
 			tempStrJ += tempStr
@@ -194,7 +194,8 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 		lol += tempStrJ
 		if(i!=(lenI-1)):
 			lol += "###"
-	final_string = lol+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(stocks)])
+	origin = str(0.0)+","+str(round(-minC*rangeChanges, 2))+","+str(round(minP*rangePrices,2))
+	final_string = lol+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(stocks)])+"-MAXIMUMSEPARATOR-"+origin
 	print final_string
 	return final_string
 def stock_in_sector(stock_id, stockData):

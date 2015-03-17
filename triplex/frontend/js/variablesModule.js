@@ -7,7 +7,7 @@ GLOBAL VARIABLES
 ------------------------------------------------------------
 ------------------------------------------------------------
 */
-var container, scene, camera, renderer, controls, stats, raycaster, projector, allTheLines;
+var container, scene, camera, renderer, controls, stats, raycaster, projector, allTheLines, axesGrid;
 var currentLineIntersected = undefined;
 var sphereSelection;
 var mouse = new THREE.Vector2();

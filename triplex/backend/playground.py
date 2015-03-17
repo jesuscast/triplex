@@ -101,3 +101,24 @@ for j in range(0, len(changesStock)):
 	elif changesStock[j] < changesSector[j] and changesStock[j] < 0 and changesSector[j] > 0:
 		changes.append(- changesSector[j] / (changesSector[j] - changesStock[j]))
 return {'times':times_stock, 'changes':changes, 'prices':prices_stock}
+
+
+
+
+
+
+raw_data_string = ""
+total_number_stocks = len(stocks_r)
+for i in range(stocks_r):
+	# i holds the stock number
+	len_of_this_stock = len(stocks_r[i])
+	string_of_this_stock = ""
+	for j, k in enumerate(stocks_r[i])
+		#k holds the timestamp
+		string_of_this_price = str(k)+","
+		string_of_this_price += ",".join([ str(n) for n in stocks_r[i][k] ])
+		if(j!=(len_of_this_stock-1)):
+			string_of_this_stock += "^"
+	if(i!=(total_number_stocks-1)):
+		raw_data_string += "###"
+

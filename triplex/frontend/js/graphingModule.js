@@ -54,7 +54,7 @@ function Line(xArray, yArray, zArray, color) {
     }
 }
 
-function AxesGrid(size, step) {
+function AxesGrid(size, step, origin) {
         //Private Variables
         var geometry = new THREE.Geometry();
         var material = new THREE.LineBasicMaterial({
@@ -80,10 +80,10 @@ function AxesGrid(size, step) {
         for (i = 0; i <= size; i += step) {
             //creates the x grid
             geometry.vertices.push(
-                new THREE.Vector3(0, 0, i),
-                new THREE.Vector3(size, 0, i),
-                new THREE.Vector3(i, 0, 0),
-                new THREE.Vector3(i, 0, size)
+                new THREE.Vector3(0, origin, i),
+                new THREE.Vector3(size, origin, i),
+                new THREE.Vector3(i, origin, 0),
+                new THREE.Vector3(i, origin, size)
             );
             //creates the z grid
             geometry.vertices.push(
@@ -107,6 +107,7 @@ function AxesGrid(size, step) {
             geometry.colors.push(colorZ, colorZ, colorZ, colorZ);
         }
         this.line = new THREE.Line(geometry, material, THREE.LinePieces);
+        return this.getGrid();
     }
 
 /*------------
@@ -141,10 +142,12 @@ function initGraphing() {
     scene.add(camera);
     // var size = 100;
     // var step = 10;
-    var axesGrid = new AxesGrid(options.size, options.step);
-    scene.add(axesGrid.getGrid());
+    axesGrid = new AxesGrid(options.size, options.step, 50);
+    // scene.add(axesGrid.getGrid());
+    scene.add(axesGrid);
     //Creates the object that is going to hold all lines
     allTheLines = new THREE.Object3D();
+    
     //Create projector for the projector of the plot into the camera
     projector = new THREE.Projector();
     //Add raycaster that is going to gold all the plots
