@@ -36,8 +36,7 @@ $(function() {
     $("#toDatePicker").val(String(today.getMonth()+1)+"-"+String(today.getDate())+"-"+String(today.getFullYear()));
     $("#fromDatePicker").val(String(today.getMonth()+1)+"-"+String(today.getDate()-14)+"-"+String(today.getFullYear()));
     refreshDates();
-    $("#fromDatePicker, #toDatePicker").on('change', function(){
-        //alert();
+    $("#changeDates").on('click', function(){
         refreshDates();
     });
     function refreshDates(){

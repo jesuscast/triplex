@@ -24,6 +24,14 @@ def stockFromFiles(stock_id):
 		finalF[stockJ[u'data'][u'timestamp'][i]]=[stockJ[u'data'][u'indicators'][u'quote'][0][u'open'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'high'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'low'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'close'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'volume'][i]]
 	return finalF
 
+def stockFromYahoo(stock='GOOG', from_date={'month':1, 'day': 1, 'year':2014}, to_date={'month':-1}):
+	result = ys.historical(stock, from_date, to_date)[::-1]
+	final = {}
+	for i, price in enumerate(result):
+		timeS = int(time.mktime(datetime.datetime.strptime(price[0], "%Y-%m-%d").timetuple()))
+		final[timeS] = [ float(n) for i, n in enumerate(price) if i!=0 ]
+	return final
+
 def getY(points, pointsRequested):
 	lPoints = len(points)
 	newPoints = []
@@ -126,10 +134,13 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 	#---- retrieve stocks information
 	#---- just draw the curve
 	for j, stock in enumerate(stocksList):
-		stockR = stockFromFiles(stock)
+		stockR = stockFromYahoo(stock, {'month':fromDate[1], 'day': fromDate[0], 'year':fromDate[2]},{'month':toDate[1], 'day': toDate[0], 'year':toDate[2]} )
 		stockT  = stock_in_sector(stock, stockR)
 		curve = bezier.Curve()
 		timesAll = range(len(stockT['times']))
+		#print stockT
+		# import sys
+		# sys.exit()
 		#print ",".join([ str(n) for n in times ])
 		#return "----p"+str(stockT['prices'][0])+"q--"
 		curve.draw(zip(timesAll,stockT['changes']), len(stockT['times']))
@@ -145,7 +156,7 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 				stocksRaw[j][i].append(val)
 			stocksRaw[j][i].append(yAxis[i])
 		#print stocks_r
-	print stocksRaw
+	#print stocksRaw
 	#--- Normalize
 	#--Normalize Prices and changes
 	shortestStockIndex = 0
@@ -162,20 +173,24 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 		tempC_m = min(stock[1])
 		if minC > tempC_m:
 			minC = tempC_m
-		if len(stocks_r[shortestStockIndex]) > len(stock):
+		if len(stocks_r[shortestStockIndex][0]) > len(stock[0]):
 			shortestStockIndex = i
 
+	if minC > 0:
+		minC = 0.0
+	if maxC < 0:
+		maxC = 0.0
 	minT = 0.0
-	maxT = float(len(stocks_r[shortestStockIndex]))
-	axisLimit = int(maxT)
+	maxT = float(len(stocks_r[shortestStockIndex][0]))
+	#print "maxT:"+str(maxT)+", min "+str(minT)+", range "+str(graphRange/float((maxT-minT)))
 	rangePrices = graphRange/(maxP-minP)
 	rangeChanges = graphRange/(maxC-minC)
-	rangeT = graphRange/(maxT-minT)
+	rangeT = graphRange/float((maxT-minT))
 
 	for i, stock in enumerate(stocks_r):
 		stocks.append([])
 		stocks[i] = []
-		stocks[i].append( stock[0] )
+		stocks[i].append( [ (n)*rangeT for n in stock[0] ])
 		stocks[i].append( [ (n-minC)*rangeChanges for n in stock[1] ] )
 		stocks[i].append( [ (n-minP)*rangePrices for n in stock[2] ] )
 	
@@ -196,7 +211,6 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 
 	origin = str(0.0)+","+str(round(-minC*rangeChanges, 2))+","+str(round(minP*rangePrices,2))
 	final_string = raw_data_string+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(stocks)])+"-MAXIMUMSEPARATOR-"+origin
-	print final_string
 	return final_string
 def stock_in_sector(stock_id, stockData):
 	cleanNameSector = ''.join(ch for ch in stocks_n_sector[stock_id][1] if ch.isalnum())
@@ -217,11 +231,18 @@ def stock_in_sector(stock_id, stockData):
 	prices_stock = []
 	prices_sector = []
 	times = []
-	for i, n in enumerate(ordered_stock):
-		if i%perOne != 0:
-			continue
-		if ordered_stock[n] != None and ordered_sector[n] !=None:
-			times.append(n)
+	if perOne > 0:
+		for i, n in enumerate(ordered_stock):
+			if i%perOne != 0:
+				continue
+			if n in ordered_stock and n in ordered_sector:
+				if ordered_stock[n] != None and ordered_sector[n] !=None:
+					times.append(n)
+	else:
+		for i, n in enumerate(ordered_stock):
+			if n in ordered_stock and n in ordered_sector:
+				if ordered_stock[n] != None and ordered_sector[n] !=None:
+					times.append(n)
 
 
 	changesStock = []

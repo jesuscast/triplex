@@ -76,6 +76,7 @@ def realtime(stock='GOOG', range='1d'):
                                stock+"/chartdata;type=quote;range="+\
                                range+"/"+request_info['format']
     data = requests.get(request_info['base_url'])
+    print request_info['base_url']
     if data.status_code == requests.codes.ok:
         #17 starting from 17 we have the data, before that is info of the company
         data_list = data.text.split('\n')[17:]

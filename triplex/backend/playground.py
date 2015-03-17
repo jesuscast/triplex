@@ -1,3 +1,4 @@
+
 import collections
 import os
 import json
@@ -152,4 +153,10 @@ for i in range(lenStocks_r):
 
 
 
-
+def stockFromYahoo(stock='GOOG', from_date={'month':1, 'day': 1, 'year':2014}, to_date={'month':-1}):
+	result = ys.historical(stock, from_date, to_date)[::-1]
+	final = {}
+	for i, price in enumerate(result):
+		timeS = int(time.mktime(datetime.datetime.strptime(price[0], "%Y-%m-%d").timetuple()))
+		final[timeS] = [ float(n) for i, n in enumerate(price) if i!=0 ]
+	return final
