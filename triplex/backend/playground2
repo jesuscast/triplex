@@ -1,0 +1,68 @@
+import collections
+import os
+import json
+
+cleanNameSector = "Biotechnology"
+#cleanNameSector = ''.join(ch for ch in stocks_n_sector[stock_id][1] if ch.isalnum())
+graphRange = 130
+
+def stockFromFiles(stock_id):
+	pathT = os.getcwd().replace("triplex-code","download_data/historical_prices/")
+	stockF = open(pathT+stock_id+".txt","r")
+	stockJ = json.loads(stockF.read())
+	stockF.close()
+	finalF = {}
+	for i in range(len(stockJ[u'data'][u'timestamp'])):
+		#finalF.append([])
+		finalF[stockJ[u'data'][u'timestamp'][i]]=[stockJ[u'data'][u'indicators'][u'quote'][0][u'open'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'high'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'low'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'close'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'volume'][i]]
+	return finalF
+
+stockData = stockFromFiles("BTE")
+#---- get the averages price of the sector
+inFF = open(path+"/triplex/backend/download_data/sectors_organized/"+cleanNameSector+".txt","r")
+sector_avg = json.loads(inFF.read())
+inFF.close()
+sector_avg = { int(n):sector_avg[n] for n in sector_avg }
+ordered_sector = collections.OrderedDict(sorted(sector_avg.items(), key=lambda t: int(t[0])))
+ordered_stock_r = collections.OrderedDict(sorted(stockData.items(), key=lambda t: int(t[0])))
+ordered_stock = collections.OrderedDict()
+for k in ordered_stock_r:
+	ordered_stock[k] = ordered_stock_r[k][3]
+
+graphRange = 130
+perOne = len(ordered_stock)/130
+prices_stock = []
+prices_sector = []
+times = []
+for i, n in enumerate(ordered_stock):
+	if i%perOne != 0:
+		continue
+	if ordered_stock[n] != None and ordered_sector[n] !=None:
+		times.append(n)
+
+
+changesStock = []
+changesSector = []
+
+for i, time in enumerate(times):
+	if i==0:
+		continue
+	else:
+		changesSector.append(float(ordered_sector[time])/float(ordered_sector[times[0]]))
+		changesStock.append(float(ordered_stock[time])/float(ordered_stock[times[0]]))
+changes = []
+for j in range(0, len(changesStock)):
+	if (changesStock[j] > changesSector[j]) and changesStock[j] > 0 and changesSector > 0:
+		changes.append(changesStock[j] / changesSector[j])
+	elif (changesStock[j] < changesSector[j]) and changesStock[j] > 0 and changesSector > 0:
+		changes.append(- changesSector[j] / changesStock[j])
+	elif changesStock[j] > changesSector[j] and changesStock[j] < 0 and changesSector[j] < 0:
+		#negative over negative becomes positive
+		changes.append(changesSector[j] / changesStock[j])
+	elif changesStock[j] < changesSector[j] and changesStock[j] < 0 and changesSector[j] < 0:
+		changes.append(- changesStock[j] / changesSector[j])
+	elif changesStock[j] > changesSector[j] and changesStock[j] > 0 and changesSector[j] < 0:
+		changes.append(changesStock[j] / (changesStock[j] - changesSector[j]))
+	elif changesStock[j] < changesSector[j] and changesStock[j] < 0 and changesSector[j] > 0:
+		changes.append(- changesSector[j] / (changesSector[j] - changesStock[j]))
+return {'times':times, 'changes':changes, 'prices':[ ordered_stock[n] for n in times ]}

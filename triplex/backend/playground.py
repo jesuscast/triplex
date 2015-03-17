@@ -1,0 +1,103 @@
+import collections
+import os
+import json
+
+cleanNameSector = "Biotechnology"
+#cleanNameSector = ''.join(ch for ch in stocks_n_sector[stock_id][1] if ch.isalnum())
+graphRange = 130
+
+def stockFromFiles(stock_id):
+	pathT = os.getcwd().replace("triplex-code","download_data/historical_prices/")
+	stockF = open(pathT+stock_id+".txt","r")
+	stockJ = json.loads(stockF.read())
+	stockF.close()
+	finalF = {}
+	for i in range(len(stockJ[u'data'][u'timestamp'])):
+		#finalF.append([])
+		finalF[stockJ[u'data'][u'timestamp'][i]]=[stockJ[u'data'][u'indicators'][u'quote'][0][u'open'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'high'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'low'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'close'][i], stockJ[u'data'][u'indicators'][u'quote'][0][u'volume'][i]]
+	return finalF
+
+stockData = stockFromFiles("BTE")
+#---- get the averages price of the sector
+inFF = open(path+"/triplex/backend/download_data/sectors_organized/"+cleanNameSector+".txt","r")
+sector_avg = json.loads(inFF.read())
+inFF.close()
+ordered_sector = collections.OrderedDict(sorted(sector_avg.items(), key=lambda t: int(t[0])))
+ordered_stock = collections.OrderedDict(sorted(stockData.items(), key=lambda t: int(t[0])))
+initialTime_sector = 0
+initialTime_sector_index = 0
+initialTime_stock = ordered_stock.keys()[0]
+initialPriceSector = 0
+for i, timeSector in enumerate(ordered_sector):
+	if initialTime_stock > int(timeSector):
+		continue
+	else:
+		initialTime_sector = int(timeSector)
+		initialTime_sector_index = i
+		break
+
+
+finalTime_sector = 0
+finalTime_sector_index = 0
+finalTime_stock = ordered_stock.keys()[::-1][0]
+prices_sector = []
+for i, timeSector in enumerate(ordered_sector):
+	if finalTime_stock > int(timeSector):
+		continue
+	else:
+		finalTime_sector = int(timeSector)
+		finalTime_sector_index = i
+		break
+
+
+interval = int ( int( finalTime_sector_index - initialTime_sector_index )/float(graphRange) )
+valsForComparison = []
+timesToCalculate = []
+currentInterval = 0
+for i, key in enumerate(ordered_sector):
+	if i < initialTime_sector_index:
+		continue
+	if i%interval==0:
+		currentInterval += 1
+	else:
+		continue
+	valsForComparison.append(ordered_sector[key])
+	timesToCalculate.append((int(key)-initialTime_sector)/60)
+
+[ (int(n)-initialTime_stock)/60  for n in ordered_sector.keys() ]
+[ i*interval for i,n in enumerate(timesToCalculate) ]
+enumerate()
+# times_stock = timesToCalculate
+# times_sector = timesToCalculate
+# [(i, ordered_stock[n][3]) for i, n in enumerate(ordered_stock)]
+# prices_stock = getY(zip(ordered_stock.keys() , [ordered_stock[n][3] for n in ordered_stock]), timesToCalculate)
+# print prices_stock
+# prices_sector = valsForComparison
+# changesStock = []
+# changesSector = []
+
+prices_stock = valsForComparison
+for i, price in enumerate(prices_stock):
+	if i==0:
+		continue
+	else:
+		changesSector.append(float(prices_sector[i])/float(prices_sector[0]))
+		changesStock.append(float(prices_stock[i])/float(prices_stock[0]))
+
+
+changes = []
+for j in range(0, len(changesStock)):
+	if (changesStock[j] > changesSector[j]) and changesStock[j] > 0 and changesSector > 0:
+		changes.append(changesStock[j] / changesSector[j])
+	elif (changesStock[j] < changesSector[j]) and changesStock[j] > 0 and changesSector > 0:
+		changes.append(- changesSector[j] / changesStock[j])
+	elif changesStock[j] > changesSector[j] and changesStock[j] < 0 and changesSector[j] < 0:
+		#negative over negative becomes positive
+		changes.append(changesSector[j] / changesStock[j])
+	elif changesStock[j] < changesSector[j] and changesStock[j] < 0 and changesSector[j] < 0:
+		changes.append(- changesStock[j] / changesSector[j])
+	elif changesStock[j] > changesSector[j] and changesStock[j] > 0 and changesSector[j] < 0:
+		changes.append(changesStock[j] / (changesStock[j] - changesSector[j]))
+	elif changesStock[j] < changesSector[j] and changesStock[j] < 0 and changesSector[j] > 0:
+		changes.append(- changesSector[j] / (changesSector[j] - changesStock[j]))
+return {'times':times_stock, 'changes':changes, 'prices':prices_stock}
