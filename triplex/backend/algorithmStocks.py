@@ -114,9 +114,9 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 	minC = 10000.0
 	maxC = -10000.0
 	#---- initiate Variables
-	stocksRaw = []
 	stocks = []
 	stocks_r = []
+	stocksRaw = []
 	#changesZ = []
 	stocksLength = len(stocksList)
 	shortestStockIndex = 0
@@ -125,10 +125,9 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 	rangeChanges = 0.0
 	#---- retrieve stocks information
 	#---- just draw the curve
-	for stock in stocksList:
+	for j, stock in enumerate(stocksList):
 		stockR = stockFromFiles(stock)
 		stockT  = stock_in_sector(stock, stockR)
-		stocksRaw.append(stockR)
 		curve = bezier.Curve()
 		timesAll = range(len(stockT['times']))
 		#print ",".join([ str(n) for n in times ])
@@ -138,12 +137,15 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 		yAxis = [ n[1] for n in curve.result ]
 		zAxis = getY(zip(timesAll,stockT['prices']), xAxis)
 		stocks_r.append([xAxis, yAxis, zAxis])
-		# print "xAxis:"
-		# print xAxis
-		# print "yAxis:"
-		# print yAxis
-		# print "zAxis:"
-		# print zAxis
+		stocksRaw.append([])
+		for i, time in enumerate(stockT['times']):
+			stocksRaw[j].append([])
+			stocksRaw[j][i].append(int(time))
+			for val in stockR[time]:
+				stocksRaw[j][i].append(val)
+			stocksRaw[j][i].append(yAxis[i])
+		#print stocks_r
+	print stocksRaw
 	#--- Normalize
 	#--Normalize Prices and changes
 	shortestStockIndex = 0
@@ -176,26 +178,24 @@ def sectorBezier(stocks_id, fromDateR, toDateR):
 		stocks[i].append( stock[0] )
 		stocks[i].append( [ (n-minC)*rangeChanges for n in stock[1] ] )
 		stocks[i].append( [ (n-minP)*rangePrices for n in stock[2] ] )
-	lol = ""
-	lenI = len(stocks_r)
-	for i in range(lenI):
-		tempStrJ = ""
-		lenJ = len(stocks_r[i])
-		for j in range(lenJ):
-			tempStr = ""
-			lenK = len(stocks_r[i][j])
-			for k in range(lenK):
-				tempStr += str(stocks_r[i][j][k])
-				if(k!=(lenK-1)):
-					tempStr += ","
-			tempStrJ += tempStr
-			if(j!=(lenJ-1)):
-				tempStrJ += "^"
-		lol += tempStrJ
-		if(i!=(lenI-1)):
-			lol += "###"
+	
+	raw_data_string = ""
+	lenStocks_r = len(stocksRaw)
+	for i in range(lenStocks_r):
+		# i holds the index of the current stock
+		lenStocks_r_vals = len(stocksRaw[i])
+		string_of_this_stock = ""
+		for j in range(lenStocks_r_vals):
+			#j holds the index of the current element in the stock
+			string_of_this_stock += ",".join( [ str(n) for n in stocksRaw[i][j] ] )
+			if(j != (lenStocks_r_vals-1)):
+				string_of_this_stock += "^"
+		raw_data_string += string_of_this_stock
+		if(i!=(lenStocks_r-1)):
+			raw_data_string += "###"
+
 	origin = str(0.0)+","+str(round(-minC*rangeChanges, 2))+","+str(round(minP*rangePrices,2))
-	final_string = lol+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(stocks)])+"-MAXIMUMSEPARATOR-"+origin
+	final_string = raw_data_string+"-MAXIMUMSEPARATOR-"+'^'.join([','.join(stock[0])+"%"+','.join(stock[1])+"%"+','.join(stock[2]) for stock in valsInString(stocks)])+"-MAXIMUMSEPARATOR-"+origin
 	print final_string
 	return final_string
 def stock_in_sector(stock_id, stockData):

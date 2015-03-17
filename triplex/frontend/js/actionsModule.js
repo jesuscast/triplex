@@ -104,7 +104,8 @@ function onDocumentMouseDown(event){
 		$stocksDisplay.find("#close span").text(selectedPointLOL[4]);
 		$stocksDisplay.find("#vol span").text(selectedPointLOL[5]);
 		$stocksDisplay.find("#stock span").text(allTheStocksData[indexSelected][0]);
-		$stocksDisplay.find("#growth span").text(String((intersectedObject.point.y/130.0*100.0).toFixed(2))+"%");
+		$stocksDisplay.find("#growth span").text(String((parseFloat(selectedPointLOL[6])*100).toFixed(2))+"%");
+		//$stocksDisplay.find("#growth span").text(String((intersectedObject.point.y/130.0*100.0).toFixed(2))+"%");
 	}
 }
 document.addEventListener('mousedown',onDocumentMouseDown, false);

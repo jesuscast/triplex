@@ -104,7 +104,20 @@ return {'times':times_stock, 'changes':changes, 'prices':prices_stock}
 
 
 
-
+raw_data_string = ""
+	total_number_stocks = len(stocks_r)
+	for i in range(stocks_r):
+		# i holds the stock number
+		len_of_this_stock = len(stocks_r[i])
+		string_of_this_stock = ""
+		for j, k in enumerate(stocks_r[i]):
+			#k holds the timestamp
+			string_of_this_price = str(k)+","
+			string_of_this_price += ",".join([ str(n) for n in stocks_r[i][k] ])
+			if(j!=(len_of_this_stock-1)):
+				string_of_this_stock += "^"
+		if(i!=(total_number_stocks-1)):
+			raw_data_string += "###"
 
 
 raw_data_string = ""
@@ -121,4 +134,22 @@ for i in range(stocks_r):
 			string_of_this_stock += "^"
 	if(i!=(total_number_stocks-1)):
 		raw_data_string += "###"
+
+raw_data_string = ""
+lenStocks_r = len(stocksRaw)
+for i in range(lenStocks_r):
+	# i holds the index of the current stock
+	lenStocks_r_vals = len(stocksRaw[i])
+	string_of_this_stock = ""
+	for j in range(lenStocks_r_vals):
+		#j holds the index of the current element in the stock
+		string_of_this_stock += ",".join( [ str(n) for n in stocksRaw[i][j] ] )
+		if(j != (lenStocks_r_vals-1)):
+			string_of_this_stock += "^"
+	raw_data_string += string_of_this_stock
+	if(i!=(lenStocks_r-1)):
+		raw_data_string += "###"
+
+
+
 
